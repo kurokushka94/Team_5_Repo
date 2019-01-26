@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      
+
     }
 
     void GatherInput()
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         m_CameraInputVector.x = Input.GetAxis("Mouse X");
         m_CameraInputVector.y = Input.GetAxis("Mouse Y");
 
-        if(Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             bWantsToJump = true;
         }
@@ -68,20 +68,27 @@ public class PlayerController : MonoBehaviour
             m_Velocity.x = Mathf.MoveTowards(m_Velocity.x, 0, m_Deacceleration * Time.deltaTime);
 
         if (Mathf.Abs(m_MovementInputVector.z) < m_MoveDeadzone)
-            m_Velocity.z = Mathf.MoveTowards(m_Velocity.z, 0, m_Deacceleration*Time.deltaTime);
+            m_Velocity.z = Mathf.MoveTowards(m_Velocity.z, 0, m_Deacceleration * Time.deltaTime);
 
-        m_Velocity += m_MovementInputVector * m_Acceleration * Time.deltaTime;
-        m_Velocity = Vector3.ClampMagnitude(m_Velocity, m_MaxSpeed);
+        m_Velocity += m_MovementInputVector * (Vector3.Dot(m_Velocity, m_MovementInputVector) > 0 ? m_Acceleration : m_Deacceleration) * Time.deltaTime;
+        Vector3 horizontalVel = m_Velocity;
+        horizontalVel.y = 0.0f;
+        horizontalVel = Vector3.ClampMagnitude(horizontalVel, m_MaxSpeed);
+        m_Velocity.x = horizontalVel.x;
+        m_Velocity.z = horizontalVel.z;
 
         transform.Rotate(transform.up, m_CameraInputVector.x * m_CameraSpeed);
-        m_Camera.transform.localRotation *= Quaternion.AngleAxis(-m_CameraInputVector.y * m_CameraSpeed, Vector3.right);
+        Quaternion targetRotation = m_Camera.transform.localRotation * Quaternion.AngleAxis(-m_CameraInputVector.y * m_CameraSpeed, Vector3.right);
+        if (Quaternion.Angle(Quaternion.identity, targetRotation) < 90)
+            m_Camera.transform.localRotation = targetRotation;
     }
 
+    Vector3 cachedVelocity;
     void ApplyVelocity()
     {
         Vector3 move = Vector3.zero;
 
-        if(m_CharacterController.isGrounded)
+        if (m_CharacterController.isGrounded)
         {
             if (bWantsToJump && m_CharacterController.isGrounded)
             {
@@ -90,20 +97,22 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                m_Velocity.y += Physics.gravity.y * Time.deltaTime;
+                m_Velocity.y = Physics.gravity.y * Time.deltaTime;
             }
+            move = transform.TransformVector(m_Velocity);
+            cachedVelocity = move;
         }
         else
         {
             bWantsToJump = false;
-            m_Velocity.y += Physics.gravity.y*Time.deltaTime;
+            cachedVelocity.y += Physics.gravity.y * Time.deltaTime;
+            move = cachedVelocity;
         }
 
-        move += m_Velocity.x * transform.right;
-        move += m_Velocity.y * transform.up;
-        move += m_Velocity.z * transform.forward;
 
-        m_CharacterController.Move(move*Time.deltaTime);
+        CollisionFlags flags = m_CharacterController.Move(move * Time.deltaTime);
+        m_Velocity = transform.InverseTransformVector(m_CharacterController.velocity);
+
     }
 
     // Update is called once per frame
@@ -111,9 +120,6 @@ public class PlayerController : MonoBehaviour
     {
         GatherInput();
         ConsumeInput();
-
-        Debug.Log(m_CharacterController.isGrounded);
-
         ApplyVelocity();
     }
 }

@@ -454,24 +454,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1230339777 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6441495940630982066, guid: e44345854db86844cb916463270b9a46,
-    type: 3}
-  m_PrefabInstance: {fileID: 6441495939671348083}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1230339778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1230339777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e27bd857e8db07b469eac0c35d995df0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1786452005
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,26 +611,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_CameraSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_Acceleration
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_Deacceleration
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_MaxSpeed
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_JumpSpeed
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e44345854db86844cb916463270b9a46, type: 3}
