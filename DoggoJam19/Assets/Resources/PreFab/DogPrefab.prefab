@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026923664}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6441495940630982071}
@@ -55,7 +55,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -96,10 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlayerController: {fileID: 1230339778}
-  m_SpeedMin: 2
+  m_SpeedMin: 5
   m_SpeedMax: 15
-  m_HorizontalMagnitudeMin: 0.1
-  m_VerticalMagnitudeMin: 0.05
+  m_HorizontalMagnitudeMin: 0.01
+  m_VerticalMagnitudeMin: 0.01
   m_HorizontalMagnitudeMax: 0.15
   m_VerticalMagnitudeMax: 0.1
 --- !u!1 &6441495940630982066
@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 6441495940630982071}
   - component: {fileID: 1230339778}
   - component: {fileID: 1230339779}
+  - component: {fileID: 1030763189982538137}
   m_Layer: 0
   m_Name: DogPrefab
   m_TagString: Player
@@ -155,6 +156,7 @@ MonoBehaviour:
   m_MaxSpeedSprint: 4
   m_MoveDeadzone: 0.15
   m_CameraSpeed: 1
+  m_CameraGamepadSpeed: 360
   m_RollMax: 15
 --- !u!143 &1230339779
 CharacterController:
@@ -167,10 +169,23 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0.75
-  m_Radius: 0.375
+  m_Height: 0.5
+  m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.15
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1030763189982538137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6441495940630982066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11415aa9bda5fa6458963dcd171fe0ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PushForce: 10
