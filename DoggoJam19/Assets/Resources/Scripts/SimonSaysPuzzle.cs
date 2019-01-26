@@ -334,14 +334,14 @@ public class SimonSaysPuzzle : MonoBehaviour
 
     private void InitializeSimon()
     {
-        if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput && !firstWall)
+        if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput && !firstWall && !isActive)
         {
             for (int i = 0; i < 4; ++i)
                 simonsTurns.Add(rand.Next() % 4);
         }
 
-        else if (firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
-            for (int i = 0; i < 4 * numRounds; ++i)
+        else if (!saveInput && !firstWall && !futureSimon && isActive)
+            for (int i = 0; i < numRounds; ++i)
                 simonsTurns.Add(rand.Next() % 4);
 
         simonIsInitialized = true;
