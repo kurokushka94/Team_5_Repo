@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    Vector3 m_CameraGamePadVector;
+
     void GatherInput()
     {
         m_MovementInputVector = Vector3.zero;
@@ -68,8 +70,11 @@ public class PlayerController : MonoBehaviour
         m_MovementInputVector.z = Input.GetAxis("Vertical");
 
         m_CameraInputVector = Vector3.zero;
-        m_CameraInputVector.x = Input.GetAxis("Mouse X");// + ;
+        m_CameraInputVector.x = Input.GetAxis("Mouse X");
         m_CameraInputVector.y = Input.GetAxis("Mouse Y");
+
+        m_CameraGamePadVector.x = Input.GetAxis("Pad X");
+        m_CameraGamePadVector.y = Input.GetAxis("Pad Y");
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -80,13 +85,23 @@ public class PlayerController : MonoBehaviour
         {
             bWantsToSprint = true;
         }
-
         if (Input.GetButtonUp("Sprint"))
         {
             bWantsToSprint = false;
         }
-    }
 
+        if(Input.GetAxis("Sprint") > 0)
+        {
+            sprintTriggerDown = true;
+            bWantsToSprint = true;
+        }
+        else if(sprintTriggerDown)
+        {
+            bWantsToSprint = false;
+            sprintTriggerDown = false;
+        }
+    }
+    bool sprintTriggerDown = false;
     float Pitch = 0.0f;
     float Roll = 0.0f;
     void ConsumeInput()
@@ -112,7 +127,10 @@ public class PlayerController : MonoBehaviour
         Pitch -= m_CameraInputVector.y * m_CameraSpeed;
         Pitch = Mathf.Clamp(Pitch, -90.0f, 90.0f);
 
-        Pitch -= m_CameraInputVector.y * m_CameraGamepadSpeed * Time.deltaTime;
+        Debug.Log(m_CameraGamePadVector);
+        transform.Rotate(transform.up, m_CameraGamePadVector.x * m_CameraGamepadSpeed * Time.deltaTime);
+
+        Pitch -= m_CameraGamePadVector.y * m_CameraGamepadSpeed * Time.deltaTime;
         Pitch = Mathf.Clamp(Pitch, -90.0f, 90.0f);
     }
 
@@ -139,6 +157,8 @@ public class PlayerController : MonoBehaviour
         {
             bWantsToJump = false;
             cachedVelocity.y += Physics.gravity.y * Time.deltaTime;
+
+            cachedVelocity += transform.TransformVector(GetHorizontalVelocity()*Time.deltaTime);
             move = cachedVelocity;
         }
 
