@@ -30,6 +30,17 @@ public class PlayerController : MonoBehaviour
     public float m_CameraSpeed = 1000.0f;
     public float m_RollMax = 30.0f;
 
+    Camera GetCamera()
+    {
+        return m_Camera.GetComponent<Camera>();
+    }
+
+    public Vector3 GetHorizontalVelocity()
+    {
+        Vector3 vel = m_Velocity;
+        vel.y = 0.0f;
+        return vel;
+    }
     public Vector3 GetVelocity()
     {
         return m_Velocity;
@@ -92,7 +103,7 @@ public class PlayerController : MonoBehaviour
         m_Velocity.x = horizontalVel.x;
         m_Velocity.z = horizontalVel.z;
 
-        Roll += m_CameraInputVector.x*Time.deltaTime;
+        Roll += m_CameraInputVector.x * Time.deltaTime;
         Roll = Mathf.Clamp(Roll, -1.0f, 1.0f);
 
         transform.Rotate(transform.up, m_CameraInputVector.x * m_CameraSpeed);
@@ -135,7 +146,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateLook()
     {
-        m_Camera.transform.localRotation = Quaternion.Euler(Pitch, 0.0f, Mathf.Lerp(-m_RollMax, m_RollMax, (Roll+1.0f)/2.0f));
+        m_Camera.transform.localRotation = Quaternion.Euler(Pitch, 0.0f, Mathf.Lerp(-m_RollMax, m_RollMax, (Roll + 1.0f) / 2.0f));
         Roll = Mathf.MoveTowards(Roll, 0.0f, 6.0f * Time.deltaTime);
     }
 
@@ -146,5 +157,39 @@ public class PlayerController : MonoBehaviour
         ConsumeInput();
         UpdateLook();
         ApplyVelocity();
+    }
+
+    public float m_PushForce = 10.0f;
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody body = hit.collider.attachedRigidbody;
+
+        // no rigidbody
+        if (body == null || body.isKinematic)
+        {
+            return;
+        }
+
+        // We dont want to push objects below us
+        if (hit.moveDirection.y < -0.3)
+        {
+            return;
+        }
+
+        // Calculate push direction from move direction,
+        // we only push objects to the sides never up and down
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+
+        // If you know how fast your character is trying to move,
+        // then you can also multiply the push velocity by that.
+
+        // Apply the push
+        body.AddForce(pushDir * m_PushForce);
+
+        JammedDoor door = hit.gameObject.GetComponent<JammedDoor>();
+        if (door)
+        {
+            door.TakeDamage(pushDir.magnitude * m_PushForce);
+        }
     }
 }
