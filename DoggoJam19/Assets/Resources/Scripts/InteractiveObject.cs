@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 [RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
 public class InteractiveObject : MonoBehaviour
 {
@@ -29,15 +31,19 @@ public class InteractiveObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		Vector3 toItem = Vector3.Normalize(transform.position - player.transform.GetChild(0).transform.position); //vector that points from the player to the item
-		float DotResult = Vector3.Dot(player.transform.GetChild(0).transform.forward, toItem);
+		float DotResult = 0;
+
+		if (player != null)
+		{
+			Vector3 toItem = Vector3.Normalize(transform.position - player.transform.GetChild(0).transform.position); //vector that points from the player to the item
+			DotResult = Vector3.Dot(player.transform.GetChild(0).transform.forward, toItem);
+		}
 
 		if (Input.GetButtonDown("Interact"))
 		{
-			if (PlayerInRange && !PickedUp)
+			if (PlayerInRange && !PickedUp && !Utility.PlayerHasAnItem)
 			{
 				Debug.Log("Picking Up Item");
-				PickedUp = true;
 				Debug.Log("Dot Product Result: " + DotResult);
 				
 				if (DotResult > 0.95f)
@@ -47,16 +53,9 @@ public class InteractiveObject : MonoBehaviour
 			}
 			else if (PickedUp)
 			{
-				PickedUp = false;
 				DetachFromPlayer();
 			}
 		}
-
-		//if (myCanvas.enabled && player != null)
-		//{
-		//	myCanvas.transform.LookAt(player.transform.position);
-		//	myCanvas.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 180);
-		//}
 
 		if (player != null)
 		{
@@ -93,6 +92,8 @@ public class InteractiveObject : MonoBehaviour
 
 	private void AttachToPlayer()
 	{
+		Utility.PlayerHasAnItem = true;
+		PickedUp = true;
 		myRigidBody.useGravity = false;
 		myRigidBody.detectCollisions = false;
 		this.transform.SetParent(player.transform.GetChild(0), true);
@@ -102,6 +103,8 @@ public class InteractiveObject : MonoBehaviour
 
 	private void DetachFromPlayer()
 	{
+		Utility.PlayerHasAnItem = false;
+		PickedUp = false;
 		myRigidBody.useGravity = true;
 		myRigidBody.detectCollisions = true;
 		this.transform.SetParent(null);
