@@ -6,66 +6,96 @@ using UnityEngine.UI;
 public class SimonSaysPuzzle : MonoBehaviour
 {
     public GameObject[] nodes; // Goes in order: 1.Cow, 2.Cat, 3.Pig, 4.Dog
+    public Canvas       wrongInput;
 
-    public bool isActive;
+    public bool     isActive;
+    public bool     saveInput;
+    public float    interactRange;
+    public int      numRounds;
 
-    public float interactRange;
+    private List<int>           simonsTurns;
+    private List<int>           playersTurns;
+    private SimonSaysPuzzle[]        allSimons;
 
-    public int numRounds;
+    private GameObject          player;
+    private System.Random       rand;
 
-    private List<int> simonsTurns;
-    private List<int> playersTurns;
+    private int currRound;
 
-    private GameObject player;
-    private System.Random rand;
-
-    private bool correctPattern;
+    private bool wrongInputShow;
+    private bool correctInput;
+    private bool madeMistake;
+    private bool simonIsInitialized;
+    private bool isLit;
+    private bool simonIsSaying;
+    private bool simonFinishedSaying;
+    private bool havePInput;
     private bool firstPasswordIn;
     private bool secondPasswordIn;
-    private bool playGame;
+    private bool playedGame;
+    private bool initialyActive;
 
     // Start is called before the first frame update
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        rand = new System.Random();
-        simonsTurns = new List<int>();
-        playersTurns = new List<int>();
-        correctPattern = true;
-        firstPasswordIn = false;
-        secondPasswordIn = false;
-        playGame = false;
+
+        rand =          new System.Random();
+        simonsTurns =   new List<int>();
+        playersTurns =  new List<int>();
+        allSimons = FindObjectsOfType<SimonSaysPuzzle>();
+
+        wrongInputShow =        false;
+        correctInput =          false;
+        simonIsInitialized =    false;
+        isLit =                 false;
+        firstPasswordIn =       false;
+        secondPasswordIn =      false;
+        playedGame =            false;
+        simonIsSaying =         false;
+        simonFinishedSaying =   false;
+        havePInput =            false;
+        madeMistake =           false;
+        initialyActive = isActive == true ? true : false;
+
+        currRound = 1;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        bool playerIsInRange = (player.transform.position - transform.position).magnitude <= interactRange ? true : false;
+
         if (isActive)
         {
-            bool playerIsInRange = (player.transform.position - transform.position).magnitude <= interactRange ? true : false;
-
             if (playerIsInRange)
             {
-                InitializeSimon();
+                if (!simonIsInitialized && !saveInput)
+                    InitializeSimon();
 
                 RaycastHit hit;
 
-                if (Physics.Raycast(player.transform.position, player.transform.GetChild(0).transform.forward, out hit, 15.0f))
+                if (Physics.Raycast(player.transform.position, player.transform.GetChild(0).transform.forward, out hit, 10.0f))
                 {
                     //Debug.DrawRay(player.transform.position, player.transform.GetChild(0).transform.forward, Color.blue);
+
+                    if (currRound <= numRounds && !simonFinishedSaying && !simonIsSaying && !saveInput)
+                        StartCoroutine("SimonSays", currRound);
 
                     if (hit.transform.name == "CowPicture")
                     {
                         for (int i = 0; i < 4; ++i)
                         {
                             if (i == 0)
-                            {
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = true;
-                                if (Input.GetButtonDown("Interact"))
-                                    AddPlayersChoice(i);
-                            }
                             else
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
+                        if (Input.GetButtonDown("Interact"))
+                        {
+                            AddPlayersChoice(0);
+                            StartCoroutine("LitPicture", 0);
+                            havePInput = true;
                         }
                     }
                     else if (hit.transform.name == "CatPicture")
@@ -73,13 +103,15 @@ public class SimonSaysPuzzle : MonoBehaviour
                         for (int i = 0; i < 4; ++i)
                         {
                             if (i == 1)
-                            {
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = true;
-                                if (Input.GetButtonDown("Interact"))
-                                    AddPlayersChoice(i);
-                            }
                             else
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
+                        if (Input.GetButtonDown("Interact"))
+                        {
+                            AddPlayersChoice(1);
+                            StartCoroutine("LitPicture", 1);
+                            havePInput = true;
                         }
                     }
                     else if (hit.transform.name == "PigPicture")
@@ -87,13 +119,15 @@ public class SimonSaysPuzzle : MonoBehaviour
                         for (int i = 0; i < 4; ++i)
                         {
                             if (i == 2)
-                            {
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = true;
-                                if (Input.GetButtonDown("Interact"))
-                                    AddPlayersChoice(i);
-                            }
                             else
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
+                        if (Input.GetButtonDown("Interact"))
+                        {
+                            AddPlayersChoice(2);
+                            StartCoroutine("LitPicture", 2);
+                            havePInput = true;
                         }
                     }
                     else if (hit.transform.name == "DogPicture")
@@ -101,41 +135,122 @@ public class SimonSaysPuzzle : MonoBehaviour
                         for (int i = 0; i < 4; ++i)
                         {
                             if (i == 3)
-                            {
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = true;
-                                if (Input.GetButtonDown("Interact"))
-                                    AddPlayersChoice(i);
-                            }
                             else
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
                         }
+                        if (Input.GetButtonDown("Interact"))
+                        {
+                            AddPlayersChoice(3);
+                            StartCoroutine("LitPicture", 3);
+                            havePInput = true;
+                        }
                     }
 
-                    //Check players input against Simon
-                    for (int i = 0; i < playersTurns.Count; ++i)
+                    if (!saveInput && !simonIsSaying && havePInput && playersTurns.Count == currRound)
                     {
-                        if (simonsTurns[i] != playersTurns[i])
+                        //Check players input against Simon
+                        for (int i = 0; i < playersTurns.Count; ++i)
                         {
-                            correctPattern = false;
-                            playersTurns.Clear();
-                            break;
+                            if (playersTurns.Count == simonsTurns.Count)
+                                correctInput = true;
+
+                            if (playersTurns[i] != simonsTurns[i])
+                            {
+                                if (!wrongInputShow)
+                                    StartCoroutine("WrongInput");
+                                madeMistake = true;
+                                break;
+                            }
                         }
+
+                        simonFinishedSaying = false;
+                        havePInput = false;
+                        playersTurns.Clear();
+
+                        if (madeMistake)
+                        {
+                            currRound = 1;
+                            madeMistake = false;
+                        }
+                        else
+                        {
+                            ++currRound;
+                        }
+
+                        if (correctInput == true)
+                        {
+                            isActive = false;
+                            for (int i = 0; i < 4; ++i)
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+
+                            if (!firstPasswordIn && !playedGame && !secondPasswordIn)
+                                for (int i = 0; i < allSimons.Length; ++i)
+                                    allSimons[i].SendMessage("SetTrigger", firstPasswordIn, SendMessageOptions.DontRequireReceiver);
+                            else if (firstPasswordIn && !playedGame && !secondPasswordIn)
+                                for (int i = 0; i < allSimons.Length; ++i)
+                                    allSimons[i].SendMessage("SetTrigger", playedGame, SendMessageOptions.DontRequireReceiver);
+                        }
+                    }
+                    else if (saveInput && !simonIsSaying && havePInput)
+                    {
+                        if (playersTurns.Count == 5)
+                        {
+                            isActive = false;
+                            for (int i = 0; i < allSimons.Length; ++i)
+                            {
+                                allSimons[i].SendMessage("SetTrigger", secondPasswordIn, SendMessageOptions.DontRequireReceiver);
+                                allSimons[i].SendMessage("SetSimonsChoice", playersTurns, SendMessageOptions.DontRequireReceiver);
+                            }
+                            for (int i = 0; i < 4; ++i)
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
+
+                        havePInput = false;
                     }
                 }
             }
+        }
+        else if(!isActive && !saveInput)
+        {
+            if (!simonIsInitialized)
+                InitializeSimon();
+
+
+        }
+
+        if(!playerIsInRange && initialyActive)
+        {
+            currRound = 1;
+            playersTurns.Clear();
+            correctInput = false;
+            isActive = true;
+            simonIsInitialized = false;
         }
     }
 
     private void InitializeSimon()
     {
-        if (!firstPasswordIn && !playGame && !secondPasswordIn)
+        if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
+        {
             for (int i = 0; i < 4; ++i)
-                simonsTurns.Add(rand.Next() % 4);
-        else if (firstPasswordIn && !playGame && !secondPasswordIn)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    int random = rand.Next() % 4;
+                    if (!simonsTurns.Contains(random))
+                    {
+                        simonsTurns.Add(random);
+                        break;
+                    }
+                }
+            }
+        }
+        else if (firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
             for (int i = 0; i < 4 * numRounds; ++i)
                 simonsTurns.Add(rand.Next() % 4);
-        else if (firstPasswordIn && playGame && !secondPasswordIn) ;
-                //Get Player's Password
+
+        simonIsInitialized = true;
     }
 
     private void AddPlayersChoice(int _choise)
@@ -143,32 +258,51 @@ public class SimonSaysPuzzle : MonoBehaviour
         playersTurns.Add(_choise);
     }
 
-    private void CheckInput(int _pInput)
+    private void SetSimonsChoice(List<int> _playersPassword)
     {
-        if (!firstPasswordIn && !playGame && !secondPasswordIn)
-            EnterFirstPassword(_pInput);
-        else if (firstPasswordIn && !playGame && !secondPasswordIn)
-            PlaySimonSays(_pInput);
-        else if (firstPasswordIn && playGame && !secondPasswordIn)
-            EnterSecondPassword(_pInput);
+        simonsTurns = _playersPassword;
     }
 
-    private void WrongInput()
+    void SetTrigger(bool _toSet)
     {
-
+        _toSet = true;
     }
 
-    private void EnterFirstPassword(int _pInput)
+    IEnumerator WrongInput()
     {
-
+        wrongInputShow = true;
+        wrongInput.enabled = true;
+        yield return new WaitForSecondsRealtime(1.0f);
+        wrongInput.enabled = false;
+        wrongInputShow = false;
     }
 
-    private void PlaySimonSays(int _pInput)
+    IEnumerator LitPicture(int _index)
     {
+        isLit = true;
+        nodes[_index].GetComponentInChildren<Light>().enabled = true;
 
+        //for (int i = 0; i < simonsTurns.Count; ++i)
+        //    Debug.Log("Simons choise:\t" + simonsTurns[i] + '\t');
+        //Debug.Log("\nLITTING " + nodes[_index].name + " LIGHT\n");
+
+        yield return new WaitForSecondsRealtime(0.3f);
+        nodes[_index].GetComponentInChildren<Light>().enabled = false;
+        isLit = false;
     }
-    private void EnterSecondPassword(int _pInput)
-    {
 
+    IEnumerator SimonSays(int _currRound)
+    {
+        simonIsSaying = true;
+        yield return new WaitForSecondsRealtime(1.0f);
+        for (int i = 0; i < _currRound; ++i)
+        {
+            if (!isLit)
+                StartCoroutine("LitPicture", simonsTurns[i]);
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
+
+        simonFinishedSaying = true;
+        simonIsSaying = false;
     }
 }
