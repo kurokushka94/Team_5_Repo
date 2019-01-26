@@ -17,15 +17,18 @@ public class PlayerController : MonoBehaviour
     Vector3 m_Velocity;
 
     bool bWantsToJump = false;
+    bool bWantsToSprint = false;
 
     // In meters
     public float m_Acceleration = 10.0f;
     public float m_Deacceleration = 20.0f;
     public float m_JumpSpeed = 10.0f;
-    public float m_MaxSpeed = 4.0f;
+    public float m_MaxSpeedWalk = 2.0f;
+    public float m_MaxSpeedSprint = 4.0f;
     public float m_MoveDeadzone = 0.15f;
     // In degrees
     public float m_CameraSpeed = 1000.0f;
+    public float m_RollMax = 30.0f;
 
     public Vector3 GetVelocity()
     {
@@ -60,8 +63,20 @@ public class PlayerController : MonoBehaviour
         {
             bWantsToJump = true;
         }
+
+        if (Input.GetButtonDown("Sprint"))
+        {
+            bWantsToSprint = true;
+        }
+
+        if (Input.GetButtonUp("Sprint"))
+        {
+            bWantsToSprint = false;
+        }
     }
 
+    float Pitch = 0.0f;
+    float Roll = 0.0f;
     void ConsumeInput()
     {
         if (Mathf.Abs(m_MovementInputVector.x) < m_MoveDeadzone)
@@ -73,14 +88,17 @@ public class PlayerController : MonoBehaviour
         m_Velocity += m_MovementInputVector * (Vector3.Dot(m_Velocity, m_MovementInputVector) > 0 ? m_Acceleration : m_Deacceleration) * Time.deltaTime;
         Vector3 horizontalVel = m_Velocity;
         horizontalVel.y = 0.0f;
-        horizontalVel = Vector3.ClampMagnitude(horizontalVel, m_MaxSpeed);
+        horizontalVel = Vector3.ClampMagnitude(horizontalVel, bWantsToSprint ? m_MaxSpeedSprint : m_MaxSpeedWalk);
         m_Velocity.x = horizontalVel.x;
         m_Velocity.z = horizontalVel.z;
 
+        Roll += m_CameraInputVector.x*Time.deltaTime;
+        Roll = Mathf.Clamp(Roll, -1.0f, 1.0f);
+
         transform.Rotate(transform.up, m_CameraInputVector.x * m_CameraSpeed);
-        Quaternion targetRotation = m_Camera.transform.localRotation * Quaternion.AngleAxis(-m_CameraInputVector.y * m_CameraSpeed, Vector3.right);
-        if (Quaternion.Angle(Quaternion.identity, targetRotation) < 90)
-            m_Camera.transform.localRotation = targetRotation;
+
+        Pitch -= m_CameraInputVector.y * m_CameraSpeed;
+        Pitch = Mathf.Clamp(Pitch, -90.0f, 90.0f);
     }
 
     Vector3 cachedVelocity;
@@ -115,11 +133,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void UpdateLook()
+    {
+        m_Camera.transform.localRotation = Quaternion.Euler(Pitch, 0.0f, Mathf.Lerp(-m_RollMax, m_RollMax, (Roll+1.0f)/2.0f));
+        Roll = Mathf.MoveTowards(Roll, 0.0f, 6.0f * Time.deltaTime);
+    }
+
     // Update is called once per frame
     void Update()
     {
         GatherInput();
         ConsumeInput();
+        UpdateLook();
         ApplyVelocity();
     }
 }

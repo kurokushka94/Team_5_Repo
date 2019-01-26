@@ -22,9 +22,9 @@ public class SmellRenderer : MonoBehaviour
         {
             agent.SetDestination(target.transform.position);
 
-            if (Vector3.Distance(transform.position, target.transform.position) <= 0.5f)
+            if (Vector3.Distance(transform.position, target.transform.position) <= 1f)
             {
-                Destroy(gameObject,0.5f);
+                Destroy(gameObject);
             }
         }
     }

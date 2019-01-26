@@ -33,7 +33,7 @@ public class InteractiveObject : MonoBehaviour
 				Vector3 toItem = transform.position - player.transform.position; //vector that points from the player to the item
 				float temp = Vector3.Dot(player.transform.forward, toItem);
 				Debug.Log("Dot Product Result: " + temp);
-				if (Vector3.Dot(player.transform.forward, toItem) > 0.7f)
+				if (Vector3.Dot(player.transform.forward, toItem) > 0.6f)
 				{
 					AttachToPlayer();
 				}
