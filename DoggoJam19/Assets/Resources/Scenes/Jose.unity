@@ -703,21 +703,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_Deacceleration
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339778, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_RollMax
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339779, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_Height
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1230339779, guid: e44345854db86844cb916463270b9a46, type: 3}
-      propertyPath: m_Radius
-      value: 0.375
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e44345854db86844cb916463270b9a46, type: 3}

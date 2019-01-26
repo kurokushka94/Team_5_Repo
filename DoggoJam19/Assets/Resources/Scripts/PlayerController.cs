@@ -17,12 +17,14 @@ public class PlayerController : MonoBehaviour
     Vector3 m_Velocity;
 
     bool bWantsToJump = false;
+    bool bWantsToSprint = false;
 
     // In meters
     public float m_Acceleration = 10.0f;
     public float m_Deacceleration = 20.0f;
     public float m_JumpSpeed = 10.0f;
-    public float m_MaxSpeed = 4.0f;
+    public float m_MaxSpeedWalk = 2.0f;
+    public float m_MaxSpeedSprint = 4.0f;
     public float m_MoveDeadzone = 0.15f;
     // In degrees
     public float m_CameraSpeed = 1000.0f;
@@ -61,6 +63,16 @@ public class PlayerController : MonoBehaviour
         {
             bWantsToJump = true;
         }
+
+        if (Input.GetButtonDown("Sprint"))
+        {
+            bWantsToSprint = true;
+        }
+
+        if (Input.GetButtonUp("Sprint"))
+        {
+            bWantsToSprint = false;
+        }
     }
 
     float Pitch = 0.0f;
@@ -76,7 +88,7 @@ public class PlayerController : MonoBehaviour
         m_Velocity += m_MovementInputVector * (Vector3.Dot(m_Velocity, m_MovementInputVector) > 0 ? m_Acceleration : m_Deacceleration) * Time.deltaTime;
         Vector3 horizontalVel = m_Velocity;
         horizontalVel.y = 0.0f;
-        horizontalVel = Vector3.ClampMagnitude(horizontalVel, m_MaxSpeed);
+        horizontalVel = Vector3.ClampMagnitude(horizontalVel, bWantsToSprint ? m_MaxSpeedSprint : m_MaxSpeedWalk);
         m_Velocity.x = horizontalVel.x;
         m_Velocity.z = horizontalVel.z;
 
