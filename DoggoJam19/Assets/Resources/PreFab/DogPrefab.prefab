@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2026923667}
   - component: {fileID: 2026923666}
   - component: {fileID: 2026923665}
+  - component: {fileID: 2266537931201360489}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -82,6 +83,25 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026923664}
   m_Enabled: 1
+--- !u!114 &2266537931201360489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026923664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27bd857e8db07b469eac0c35d995df0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PlayerController: {fileID: 1230339778}
+  m_SpeedMin: 2
+  m_SpeedMax: 15
+  m_HorizontalMagnitudeMin: 0.1
+  m_VerticalMagnitudeMin: 0.05
+  m_HorizontalMagnitudeMax: 0.15
+  m_VerticalMagnitudeMax: 0.1
 --- !u!1 &6441495940630982066
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,10 +148,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 2026923664}
-  m_Acceleration: 1
-  m_Deacceleration: 1
-  m_MaxSpeed: 1
-  m_CameraSpeed: 45
+  m_Acceleration: 10
+  m_Deacceleration: 12
+  m_JumpSpeed: 5
+  m_MaxSpeed: 6
+  m_MoveDeadzone: 0.15
+  m_CameraSpeed: 1
 --- !u!143 &1230339779
 CharacterController:
   m_ObjectHideFlags: 0
