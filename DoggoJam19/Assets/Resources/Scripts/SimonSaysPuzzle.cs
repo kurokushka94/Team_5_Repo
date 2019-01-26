@@ -6,16 +6,18 @@ using UnityEngine.UI;
 public class SimonSaysPuzzle : MonoBehaviour
 {
     public GameObject[] nodes; // Goes in order: 1.Cow, 2.Cat, 3.Pig, 4.Dog
+    public GameObject   futureWall;
     public Canvas       wrongInput;
 
-    public bool     isActive;
-    public bool     saveInput;
-    public float    interactRange;
-    public int      numRounds;
+    [HideInInspector]   public List<int> simonsTurns;
+    [HideInInspector]   public bool inputWasSaved;
+    public bool         isActive;
+    public bool         saveInput;
+    public float        interactRange;
+    public int          numRounds;
 
-    private List<int>           simonsTurns;
-    private List<int>           playersTurns;
-    private SimonSaysPuzzle[]        allSimons;
+    private List<int>               playersTurns;
+    private SimonSaysPuzzle[]       allSimons;
 
     private GameObject          player;
     private System.Random       rand;
@@ -34,6 +36,9 @@ public class SimonSaysPuzzle : MonoBehaviour
     private bool secondPasswordIn;
     private bool playedGame;
     private bool initialyActive;
+    private bool finishedInput;
+    //private bool waiting;
+    //private bool collectedInput;
 
     // Start is called before the first frame update
     private void Start()
@@ -56,6 +61,10 @@ public class SimonSaysPuzzle : MonoBehaviour
         simonFinishedSaying =   false;
         havePInput =            false;
         madeMistake =           false;
+        inputWasSaved =         false;
+        finishedInput =         false;
+        //waiting =               false;
+        //collectedInput =        false;
         initialyActive = isActive == true ? true : false;
 
         currRound = 1;
@@ -70,16 +79,16 @@ public class SimonSaysPuzzle : MonoBehaviour
         {
             if (playerIsInRange)
             {
-                if (!simonIsInitialized && !saveInput)
+                if (!simonIsInitialized && !saveInput &&initialyActive &&!inputWasSaved)
                     InitializeSimon();
 
                 RaycastHit hit;
 
-                if (Physics.Raycast(player.transform.position, player.transform.GetChild(0).transform.forward, out hit, 10.0f))
+                if (Physics.Raycast(player.transform.position, Camera.main.transform.forward, out hit, 10.0f))
                 {
                     //Debug.DrawRay(player.transform.position, player.transform.GetChild(0).transform.forward, Color.blue);
 
-                    if (currRound <= numRounds && !simonFinishedSaying && !simonIsSaying && !saveInput)
+                    if (currRound <= numRounds && !simonFinishedSaying && !simonIsSaying && !saveInput && !inputWasSaved)
                         StartCoroutine("SimonSays", currRound);
 
                     if (hit.transform.name == "CowPicture")
@@ -96,6 +105,8 @@ public class SimonSaysPuzzle : MonoBehaviour
                             AddPlayersChoice(0);
                             StartCoroutine("LitPicture", 0);
                             havePInput = true;
+                            //CheckInput(0, currRound - 1);
+                            //++currRound;
                         }
                     }
                     else if (hit.transform.name == "CatPicture")
@@ -112,6 +123,8 @@ public class SimonSaysPuzzle : MonoBehaviour
                             AddPlayersChoice(1);
                             StartCoroutine("LitPicture", 1);
                             havePInput = true;
+                            //CheckInput(1, currRound - 1);
+                            //++currRound;
                         }
                     }
                     else if (hit.transform.name == "PigPicture")
@@ -128,6 +141,8 @@ public class SimonSaysPuzzle : MonoBehaviour
                             AddPlayersChoice(2);
                             StartCoroutine("LitPicture", 2);
                             havePInput = true;
+                            //CheckInput(2, currRound - 1);
+                            //++currRound;
                         }
                     }
                     else if (hit.transform.name == "DogPicture")
@@ -144,16 +159,19 @@ public class SimonSaysPuzzle : MonoBehaviour
                             AddPlayersChoice(3);
                             StartCoroutine("LitPicture", 3);
                             havePInput = true;
+                            //CheckInput(3, currRound - 1);
+                            //++currRound;
                         }
                     }
 
-                    if (!saveInput && !simonIsSaying && havePInput && playersTurns.Count == currRound)
+                    if (!saveInput && !simonIsSaying && havePInput)
                     {
                         //Check players input against Simon
                         for (int i = 0; i < playersTurns.Count; ++i)
                         {
-                            if (playersTurns.Count == simonsTurns.Count)
-                                correctInput = true;
+                            if (playersTurns.Count == currRound)
+                                if (playersTurns.Count == simonsTurns.Count)
+                                    correctInput = true;
 
                             if (playersTurns[i] != simonsTurns[i])
                             {
@@ -164,18 +182,24 @@ public class SimonSaysPuzzle : MonoBehaviour
                             }
                         }
 
-                        simonFinishedSaying = false;
-                        havePInput = false;
-                        playersTurns.Clear();
+                        if (playersTurns.Count == currRound)
+                            finishedInput = true;
 
                         if (madeMistake)
                         {
                             currRound = 1;
-                            madeMistake = false;
+                            finishedInput = true;
                         }
-                        else
+
+                        if (finishedInput)
                         {
-                            ++currRound;
+                            simonFinishedSaying = false;
+                            havePInput = false;
+                            playersTurns.Clear();
+                            if(!madeMistake)
+                                ++currRound;
+                            madeMistake = false;
+                            finishedInput = false;
                         }
 
                         if (correctInput == true)
@@ -186,10 +210,10 @@ public class SimonSaysPuzzle : MonoBehaviour
 
                             if (!firstPasswordIn && !playedGame && !secondPasswordIn)
                                 for (int i = 0; i < allSimons.Length; ++i)
-                                    allSimons[i].SendMessage("SetTrigger", firstPasswordIn, SendMessageOptions.DontRequireReceiver);
+                                    allSimons[i].SendMessage("SetFlag", firstPasswordIn, SendMessageOptions.DontRequireReceiver);
                             else if (firstPasswordIn && !playedGame && !secondPasswordIn)
                                 for (int i = 0; i < allSimons.Length; ++i)
-                                    allSimons[i].SendMessage("SetTrigger", playedGame, SendMessageOptions.DontRequireReceiver);
+                                    allSimons[i].SendMessage("SetFlag", playedGame, SendMessageOptions.DontRequireReceiver);
                         }
                     }
                     else if (saveInput && !simonIsSaying && havePInput)
@@ -199,27 +223,32 @@ public class SimonSaysPuzzle : MonoBehaviour
                             isActive = false;
                             for (int i = 0; i < allSimons.Length; ++i)
                             {
-                                allSimons[i].SendMessage("SetTrigger", secondPasswordIn, SendMessageOptions.DontRequireReceiver);
-                                allSimons[i].SendMessage("SetSimonsChoice", playersTurns, SendMessageOptions.DontRequireReceiver);
+                                allSimons[i].SendMessage("SetFlag", secondPasswordIn, SendMessageOptions.DontRequireReceiver);
                             }
                             for (int i = 0; i < 4; ++i)
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+
+                            futureWall.GetComponent<SimonSaysPuzzle>().inputWasSaved = true;
+                            futureWall.GetComponent<SimonSaysPuzzle>().simonsTurns.Clear();
+                            futureWall.GetComponent<SimonSaysPuzzle>().simonsTurns = playersTurns;
                         }
 
                         havePInput = false;
                     }
+
+                    //collectedInput = false;
                 }
             }
         }
-        else if(!isActive && !saveInput)
+        else if(!isActive && !saveInput && initialyActive)
         {
             if (!simonIsInitialized)
                 InitializeSimon();
 
-
+            //Sprite[] switchPictures = new Sprite[4];
         }
 
-        if(!playerIsInRange && initialyActive)
+        if(!playerIsInRange && initialyActive && !saveInput)
         {
             currRound = 1;
             playersTurns.Clear();
@@ -229,23 +258,27 @@ public class SimonSaysPuzzle : MonoBehaviour
         }
     }
 
+    private void CheckInput(int _input, int _index)
+    {
+        if (playersTurns.Count == currRound)
+            if (playersTurns.Count == simonsTurns.Count)
+                correctInput = true;
+
+        if (playersTurns[_index] != simonsTurns[_index])
+        {
+            if (!wrongInputShow)
+                StartCoroutine("WrongInput");
+            madeMistake = true;
+        }
+
+    }
+
     private void InitializeSimon()
     {
         if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
-        {
             for (int i = 0; i < 4; ++i)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    int random = rand.Next() % 4;
-                    if (!simonsTurns.Contains(random))
-                    {
-                        simonsTurns.Add(random);
-                        break;
-                    }
-                }
-            }
-        }
+                simonsTurns.Add(rand.Next() % 4);
+
         else if (firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
             for (int i = 0; i < 4 * numRounds; ++i)
                 simonsTurns.Add(rand.Next() % 4);
@@ -263,7 +296,7 @@ public class SimonSaysPuzzle : MonoBehaviour
         simonsTurns = _playersPassword;
     }
 
-    void SetTrigger(bool _toSet)
+    void SetFlag(bool _toSet)
     {
         _toSet = true;
     }
@@ -305,4 +338,12 @@ public class SimonSaysPuzzle : MonoBehaviour
         simonFinishedSaying = true;
         simonIsSaying = false;
     }
+
+    //IEnumerator WaitForInput(float _seconds)
+    //{
+    //    waiting = true;
+    //    yield return new WaitForSecondsRealtime(_seconds);
+    //    collectedInput = true;
+    //    waiting = false;
+    //}
 }
