@@ -12,7 +12,7 @@
 
 
         _SpeedY("Speed along Y", Range(0, 5)) = 1
-        _OffsetY("Offset along Y", Range(0, 5)) = 1
+        _OffsetY("Offset along Y", Range(0, 15)) = 1
     }
     SubShader
     {
@@ -59,11 +59,8 @@
                 half noiseVal = tex2D(_NoiseTex, uv).r;
 				half test = tex2D(_MainTex, uv).r;
 
-				if(test<_Disperse)
-					clip(-1);
+				clip(step(test,_Disperse)-1);
 
-			    if(noiseVal.r<_Adjustment)
-					return half4(1,1,1,1);
 
                 return (0,0,0,0);
         }

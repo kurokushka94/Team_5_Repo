@@ -6,6 +6,8 @@ public class ToggleActivePlayer : MonoBehaviour
 {
 	public GameObject FuturePlayer;
 	public GameObject PastPlayer;
+    [SerializeField]
+    GameObject FadeScreen = null;
 
 	private Camera MainCam;
 	//private CharacterController FutureController;
@@ -48,11 +50,13 @@ public class ToggleActivePlayer : MonoBehaviour
 		if(transform.childCount != 0)
 		{
 			InteractiveObject io = transform.GetComponentInChildren<InteractiveObject>();
-			io.gameObject.SendMessage("DetachFromPlayer", SendMessageOptions.DontRequireReceiver);
+            if (io != null)
+                io.gameObject.SendMessage("DetachFromPlayer", SendMessageOptions.DontRequireReceiver);
 
 			this.transform.DetachChildren();
 		}
-		
+        FadeScreen.transform.SetParent(this.transform);
+
 		oldPlayer.GetComponent<CharacterController>().enabled = false;
 		oldPlayer.GetComponent<PlayerController>().enabled = false;
 		GetComponent<CameraBob>().m_PlayerController = newPlayer.GetComponent<PlayerController>();
@@ -61,7 +65,11 @@ public class ToggleActivePlayer : MonoBehaviour
 
 		float tempFOV = MainCam.fieldOfView;
 
-		for(float i = tempFOV; i < 150.0f; i += 1.0f)
+        if(FadeScreen!= null)
+            FadeScreen.GetComponent<FadeOut>().FadeOutScreen();
+
+
+        for (float i = tempFOV; i < 120.0f; i += 1.0f)
 		{
 			MainCam.fieldOfView += 1.0f;
 			yield return new WaitForEndOfFrame();
@@ -74,7 +82,7 @@ public class ToggleActivePlayer : MonoBehaviour
 
 		yield return new WaitForEndOfFrame();
 
-		for(float i = 150.0f; i > tempFOV; i -= 1.0f)
+		for(float i = 120.0f; i > tempFOV; i -= 1.0f)
 		{
 			MainCam.fieldOfView -= 1.0f;
 			yield return new WaitForEndOfFrame();

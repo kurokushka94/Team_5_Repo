@@ -5,15 +5,23 @@ using UnityEngine;
 public class FadeOut : MonoBehaviour
 {
     float FadeTimer = 0;
+    [SerializeField]
+    float SpacerDelay = 0;
     bool isFadingOut = false;
     bool isFadingIn = false;
+    [SerializeField]
+    float Speed = 0.1f;
+    [SerializeField]
     Material targetMaterial = null;
     // Start is called before the first frame update
     private void Awake()
     {
-        Renderer test = gameObject.GetComponent<Renderer>();
-        if (test)
-            targetMaterial = test.material;
+        if (targetMaterial == null)
+        {
+            Renderer test = gameObject.GetComponent<Renderer>();
+            if (test)
+                targetMaterial = test.material;
+        }
     }
 
     // 1 = transparent
@@ -22,14 +30,14 @@ public class FadeOut : MonoBehaviour
     {
         if(isFadingIn)
         {
-            FadeTimer += Time.deltaTime;
-            if (FadeTimer >= 1)
+            FadeTimer -= Time.deltaTime* Speed;
+            if (FadeTimer <= 0)
                 isFadingIn = false;
         }
         if (isFadingOut)
         {
-            FadeTimer -= Time.deltaTime;
-            if (FadeTimer <= 0)
+            FadeTimer += Time.deltaTime* Speed;
+            if (FadeTimer >= 1+SpacerDelay)
             {
                 isFadingOut = false;
                 isFadingIn = true;
