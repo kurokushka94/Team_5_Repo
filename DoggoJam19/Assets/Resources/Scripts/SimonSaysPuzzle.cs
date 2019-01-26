@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimonSaysPuzzle : MonoBehaviour
 {
-    public GameObject[] nodes;
+    public GameObject[] nodes; // Goes in order: 1.Cow, 2.Cat, 3.Pig, 4.Dog
 
     public bool isActive;
 
@@ -16,7 +16,7 @@ public class SimonSaysPuzzle : MonoBehaviour
     private List<int> playersTurns;
 
     private GameObject player;
-    System.Random rand;
+    private System.Random rand;
 
     private bool firstPasswordIn;
     private bool secondPasswordIn;
@@ -54,19 +54,31 @@ public class SimonSaysPuzzle : MonoBehaviour
 
                     if (hit.transform.name == "CowPicture")
                     {
-
+                        nodes[0].GetComponentInChildren<Canvas>().enabled = true;
+                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
                     }
                     else if (hit.transform.name == "CatPicture")
                     {
-
+                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[1].GetComponentInChildren<Canvas>().enabled = true;
+                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
                     }
                     else if (hit.transform.name == "PigPicture")
                     {
-
+                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[2].GetComponentInChildren<Canvas>().enabled = true;
+                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
                     }
                     else if (hit.transform.name == "DogPicture")
                     {
-
+                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
+                        nodes[3].GetComponentInChildren<Canvas>().enabled = true;
                     }
                 }
 
