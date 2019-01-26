@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour
     void UpdateLook()
     {
         m_Camera.transform.localRotation = Quaternion.Euler(Pitch, 0.0f, Mathf.Lerp(-m_RollMax, m_RollMax, (Roll + 1.0f) / 2.0f));
-        Roll = Mathf.MoveTowards(Roll, 0.0f, 6.0f * Time.deltaTime);
+        Roll = Mathf.MoveTowards(Roll, 0.0f, 3.0f * Time.deltaTime);
     }
 
     // Update is called once per frame
