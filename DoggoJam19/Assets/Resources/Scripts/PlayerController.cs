@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public float m_MoveDeadzone = 0.15f;
     // In degrees
     public float m_CameraSpeed = 1000.0f;
+    public float m_CameraGamepadSpeed = 90.0f;
     public float m_RollMax = 30.0f;
 
     Camera GetCamera()
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour
         m_MovementInputVector.z = Input.GetAxis("Vertical");
 
         m_CameraInputVector = Vector3.zero;
-        m_CameraInputVector.x = Input.GetAxis("Mouse X");
+        m_CameraInputVector.x = Input.GetAxis("Mouse X");// + ;
         m_CameraInputVector.y = Input.GetAxis("Mouse Y");
 
         if (Input.GetButtonDown("Jump"))
@@ -109,6 +110,9 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(transform.up, m_CameraInputVector.x * m_CameraSpeed);
 
         Pitch -= m_CameraInputVector.y * m_CameraSpeed;
+        Pitch = Mathf.Clamp(Pitch, -90.0f, 90.0f);
+
+        Pitch -= m_CameraInputVector.y * m_CameraGamepadSpeed * Time.deltaTime;
         Pitch = Mathf.Clamp(Pitch, -90.0f, 90.0f);
     }
 
@@ -157,39 +161,5 @@ public class PlayerController : MonoBehaviour
         ConsumeInput();
         UpdateLook();
         ApplyVelocity();
-    }
-
-    public float m_PushForce = 10.0f;
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-
-        // no rigidbody
-        if (body == null || body.isKinematic)
-        {
-            return;
-        }
-
-        // We dont want to push objects below us
-        if (hit.moveDirection.y < -0.3)
-        {
-            return;
-        }
-
-        // Calculate push direction from move direction,
-        // we only push objects to the sides never up and down
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-
-        // If you know how fast your character is trying to move,
-        // then you can also multiply the push velocity by that.
-
-        // Apply the push
-        body.AddForce(pushDir * m_PushForce);
-
-        JammedDoor door = hit.gameObject.GetComponent<JammedDoor>();
-        if (door)
-        {
-            door.TakeDamage(pushDir.magnitude * m_PushForce);
-        }
     }
 }
