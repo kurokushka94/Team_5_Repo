@@ -9,7 +9,7 @@ public class Past : Future
     public override void ActivateObject()
     {
         ActivateStart();
-    //    futureObject.GetComponent<Future>().ActivateObject(this.gameObject);
+        futureObject.GetComponent<Future>().ActivateObject();
     }
     public override void FinishUpdate(GameObject _pointLess)
     {
