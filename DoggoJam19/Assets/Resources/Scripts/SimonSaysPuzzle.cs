@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SimonSaysPuzzle : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class SimonSaysPuzzle : MonoBehaviour
     private GameObject player;
     private System.Random rand;
 
+    private bool correctPattern;
     private bool firstPasswordIn;
     private bool secondPasswordIn;
     private bool playGame;
@@ -29,12 +31,10 @@ public class SimonSaysPuzzle : MonoBehaviour
         rand = new System.Random();
         simonsTurns = new List<int>();
         playersTurns = new List<int>();
+        correctPattern = true;
         firstPasswordIn = false;
         secondPasswordIn = false;
         playGame = false;
-
-        for (int i = 0; i < 4 * numRounds; ++i)
-            simonsTurns.Add(rand.Next() % 4);
     }
 
     // Update is called once per frame
@@ -46,6 +46,8 @@ public class SimonSaysPuzzle : MonoBehaviour
 
             if (playerIsInRange)
             {
+                InitializeSimon();
+
                 RaycastHit hit;
 
                 if (Physics.Raycast(player.transform.position, player.transform.GetChild(0).transform.forward, out hit, 15.0f))
@@ -54,63 +56,113 @@ public class SimonSaysPuzzle : MonoBehaviour
 
                     if (hit.transform.name == "CowPicture")
                     {
-                        nodes[0].GetComponentInChildren<Canvas>().enabled = true;
-                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            if (i == 0)
+                            {
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = true;
+                                if (Input.GetButtonDown("Interact"))
+                                    AddPlayersChoice(i);
+                            }
+                            else
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
                     }
                     else if (hit.transform.name == "CatPicture")
                     {
-                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[1].GetComponentInChildren<Canvas>().enabled = true;
-                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            if (i == 1)
+                            {
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = true;
+                                if (Input.GetButtonDown("Interact"))
+                                    AddPlayersChoice(i);
+                            }
+                            else
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
                     }
                     else if (hit.transform.name == "PigPicture")
                     {
-                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[2].GetComponentInChildren<Canvas>().enabled = true;
-                        nodes[3].GetComponentInChildren<Canvas>().enabled = false;
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            if (i == 2)
+                            {
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = true;
+                                if (Input.GetButtonDown("Interact"))
+                                    AddPlayersChoice(i);
+                            }
+                            else
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
                     }
                     else if (hit.transform.name == "DogPicture")
                     {
-                        nodes[0].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[1].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[2].GetComponentInChildren<Canvas>().enabled = false;
-                        nodes[3].GetComponentInChildren<Canvas>().enabled = true;
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            if (i == 3)
+                            {
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = true;
+                                if (Input.GetButtonDown("Interact"))
+                                    AddPlayersChoice(i);
+                            }
+                            else
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
                     }
-                }
 
-                if (Input.GetButtonDown("Interact"))
-                {
-                    if (!firstPasswordIn && !playGame && !secondPasswordIn)
-                        EnterFirstPassword();
-                    else if (firstPasswordIn && !playGame && !secondPasswordIn)
-                        PlaySimonSays();
-                    else if (firstPasswordIn && playGame && !secondPasswordIn)
-                        EnterSecondPassword();
+                    //Check players input against Simon
+                    for (int i = 0; i < playersTurns.Count; ++i)
+                    {
+                        if (simonsTurns[i] != playersTurns[i])
+                        {
+                            correctPattern = false;
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
 
-    private void EnterFirstPassword()
+    private void InitializeSimon()
     {
-
-    }
-
-    private void PlaySimonSays()
-    {
-
-    }
-    private void EnterSecondPassword()
-    {
-
+        if (!firstPasswordIn && !playGame && !secondPasswordIn)
+            for (int i = 0; i < 4; ++i)
+                simonsTurns.Add(rand.Next() % 4);
+        else if (firstPasswordIn && !playGame && !secondPasswordIn)
+            for (int i = 0; i < 4 * numRounds; ++i)
+                simonsTurns.Add(rand.Next() % 4);
+        else if (firstPasswordIn && playGame && !secondPasswordIn) ;
+                //Get Player's Password
     }
 
     private void AddPlayersChoice(int _choise)
     {
         playersTurns.Add(_choise);
+    }
+
+    private void CheckInput(int _pInput)
+    {
+        if (!firstPasswordIn && !playGame && !secondPasswordIn)
+            EnterFirstPassword(_pInput);
+        else if (firstPasswordIn && !playGame && !secondPasswordIn)
+            PlaySimonSays(_pInput);
+        else if (firstPasswordIn && playGame && !secondPasswordIn)
+            EnterSecondPassword(_pInput);
+    }
+
+    private void EnterFirstPassword(int _pInput)
+    {
+
+    }
+
+    private void PlaySimonSays(int _pInput)
+    {
+
+    }
+    private void EnterSecondPassword(int _pInput)
+    {
+
     }
 }
