@@ -13,6 +13,7 @@ public class SimonSaysPuzzle : MonoBehaviour
     [HideInInspector]   public bool inputWasSaved;
     public bool         isActive;
     public bool         saveInput;
+    public bool         futureSimon;
     public float        interactRange;
     public int          numRounds;
 
@@ -66,6 +67,8 @@ public class SimonSaysPuzzle : MonoBehaviour
         //waiting =               false;
         //collectedInput =        false;
         initialyActive = isActive == true ? true : false;
+
+        Debug.Log("FUTURE SIMON IS: " + futureSimon);
 
         currRound = 1;
     }
@@ -164,7 +167,7 @@ public class SimonSaysPuzzle : MonoBehaviour
                         }
                     }
 
-                    if (!saveInput && !simonIsSaying && havePInput)
+                    if (!saveInput && !simonIsSaying && havePInput && !futureSimon)
                     {
                         //Check players input against Simon
                         for (int i = 0; i < playersTurns.Count; ++i)
@@ -196,7 +199,7 @@ public class SimonSaysPuzzle : MonoBehaviour
                             simonFinishedSaying = false;
                             havePInput = false;
                             playersTurns.Clear();
-                            if(!madeMistake)
+                            if (!madeMistake)
                                 ++currRound;
                             madeMistake = false;
                             finishedInput = false;
@@ -235,12 +238,53 @@ public class SimonSaysPuzzle : MonoBehaviour
 
                         havePInput = false;
                     }
+                    if(futureSimon && havePInput)
+                    {
+                        for (int i = 0; i < playersTurns.Count; ++i)
+                        {
+                            if (playersTurns.Count == simonsTurns.Count)
+                                correctInput = true;
 
+                            if (playersTurns[i] != simonsTurns[i])
+                            {
+                                correctInput = false;
+                                madeMistake = true;
+                                break;
+                            }
+                        }
+                       
+                        if (madeMistake)
+                        {
+                            StartCoroutine("WrongInput");
+                            currRound = 1;
+                            finishedInput = true;
+                        }
+
+                        if (playersTurns.Count == simonsTurns.Count)
+                            finishedInput = true;
+
+                        if (finishedInput)
+                        {
+                            playersTurns.Clear();
+                            if (!madeMistake)
+                                ++currRound;
+                            madeMistake = false;
+                            finishedInput = false;
+                            havePInput = false;
+                        }
+
+                        if(correctInput)
+                        {
+                            isActive = false;
+                            for (int i = 0; i < 4; ++i)
+                                nodes[i].GetComponentInChildren<Canvas>().enabled = false;
+                        }
+                    }
                     //collectedInput = false;
                 }
             }
         }
-        else if(!isActive && !saveInput && initialyActive)
+        else if(!isActive && !saveInput && initialyActive && !futureSimon)
         {
             if (!simonIsInitialized)
                 InitializeSimon();
@@ -248,7 +292,7 @@ public class SimonSaysPuzzle : MonoBehaviour
             //Sprite[] switchPictures = new Sprite[4];
         }
 
-        if(!playerIsInRange && initialyActive && !saveInput)
+        if(!playerIsInRange && initialyActive && !saveInput && !futureSimon)
         {
             currRound = 1;
             playersTurns.Clear();
