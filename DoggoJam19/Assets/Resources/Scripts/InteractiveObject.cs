@@ -40,7 +40,7 @@ public class InteractiveObject : MonoBehaviour
 
 				float DotResult = Vector3.Dot(player.transform.GetChild(0).transform.forward, toItem);
 				Debug.Log("Dot Product Result: " + DotResult);
-
+				
 				if (DotResult > 0.95f)
 				{
 					AttachToPlayer();
