@@ -34,7 +34,7 @@ public class SmellyObject : MonoBehaviour
         GameObject temp = Instantiate(smellEffect, player.transform.position + offset, player.transform.rotation);
         temp.SendMessage("SetTarget", gameObject);
 
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSecondsRealtime(0.15f);
 
         isEffecting = false;
     }
