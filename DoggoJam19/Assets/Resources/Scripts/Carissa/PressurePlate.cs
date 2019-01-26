@@ -72,12 +72,14 @@ public class PressurePlate : MonoBehaviour
                     isPressed = true;
                     transform.position += offset;
                     platform.SendMessage("AddToOffset", distance, SendMessageOptions.DontRequireReceiver);
+                    platform.GetComponent<Platform>().isIncreasing = true;
                 }
                 else if (isPressed)
                 {
                     isPressed = false;
                     transform.position = position;
                     platform.SendMessage("SubtractFromOffset", distance, SendMessageOptions.DontRequireReceiver);
+                    platform.GetComponent<Platform>().isIncreasing = false;
                 }
                 hasLeftPlate = false;
             }
