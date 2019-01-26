@@ -13,6 +13,7 @@ public static class Utility
         return GlobalOffset;
     }
 
+	public static bool PlayerHasAnItem = false;
     //enum SCRIPTINDEX
     //{
     //    Sliding = 0
