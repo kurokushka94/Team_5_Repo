@@ -20,9 +20,25 @@ public class PressurePlate : MonoBehaviour
     {
         platform = GameObject.Find("Platform");
 
-        if (gameObject.name == "PressurePlate[5]")
+        if (gameObject.name == "PressurePlate[3]")
+        {
+            distance = new Vector3(0f, 0.3f, 0f);
+        }
+        else if (gameObject.name == "PressurePlate[5]")
         {
             distance = new Vector3(0f, 0.5f, 0f);
+        }
+        else if (gameObject.name == "PressurePlate[8]")
+        {
+            distance = new Vector3(0f, 0.8f, 0f);
+        }
+        else if (gameObject.name == "PressurePlate[10]")
+        {
+            distance = new Vector3(0f, 1f, 0f);
+        }
+        else if (gameObject.name == "PressurePlate[15]")
+        {
+            distance = new Vector3(0f, 1.5f, 0f);
         }
 
         position = transform.position;
