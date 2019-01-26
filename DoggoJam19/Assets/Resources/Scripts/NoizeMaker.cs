@@ -31,7 +31,7 @@ public class NoizeMaker : MonoBehaviour
             Vector3 spawnPoint = new Vector3(transform.position.x + offsetX,
                 transform.position.y + offsetY, transform.position.z + offsetZ);
             GameObject temp;
-            temp = Instantiate(noizeIndicator/*, spawnPoint, transform.rotation*/);
+            temp = Instantiate(noizeIndicator, spawnPoint, transform.rotation);
             getIndicator = temp;
             haveAnIndicator = true;
         }
