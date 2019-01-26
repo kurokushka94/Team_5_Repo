@@ -13,18 +13,33 @@ public class JammedDoor : MonoBehaviour
     bool onCooldown = false;
     public void TakeDamage(float damage)
     {
-        if (onCooldown)
-            return;
-        m_Health -= damage;
-        Debug.Log(damage);
-        JointLimits newLimit = hinge.limits;
-        newLimit.max = Mathf.Lerp(90.0f, 0.0f, m_Health / initialHealth);
-        hinge.limits = newLimit;
+        if (m_Health > 0)
+        {
+            if (onCooldown)
+                return;
+            onCooldown = true;
+            StartCoroutine(DamageTimer());
+            m_Health -= damage;
+            JointLimits newLimit = hinge.limits;
+            newLimit.max = Mathf.Lerp(20.0f, 0.0f, m_Health / initialHealth);
+            hinge.limits = newLimit;
+        }
+        else
+        {
+            JointLimits newLimit = hinge.limits;
+            newLimit.max = 140.0f;
+            hinge.limits = newLimit;
+
+            JointSpring spring = hinge.spring;
+            spring.spring = 0.0f;
+            hinge.spring = spring;
+
+            enabled = false;
+        }
     }
 
     IEnumerator DamageTimer()
     {
-        onCooldown = true;
         yield return new WaitForSeconds(m_Cooldown);
         onCooldown = false;
     }
