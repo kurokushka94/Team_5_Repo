@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SmellyObject : MonoBehaviour
 {
-    public Camera mainCamera;
+    //public Camera mainCamera;
+    GameObject player;
     public GameObject smellEffect;
 
     public bool isSmelling;
@@ -13,7 +14,7 @@ public class SmellyObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -29,8 +30,8 @@ public class SmellyObject : MonoBehaviour
     {
         isEffecting = true;
 
-        Vector3 offset = new Vector3(0f, -1f, 1f);
-        GameObject temp = Instantiate(smellEffect, mainCamera.transform.position + offset, mainCamera.transform.rotation);
+        Vector3 offset = new Vector3(0f, -5f, 1f);
+        GameObject temp = Instantiate(smellEffect, player.transform.position + offset, player.transform.rotation);
         temp.SendMessage("SetTarget", gameObject);
 
         yield return new WaitForSecondsRealtime(0.1f);
