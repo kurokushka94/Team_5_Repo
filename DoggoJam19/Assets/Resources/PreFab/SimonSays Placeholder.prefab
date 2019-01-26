@@ -111,7 +111,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 0, g: 0.089500904, b: 1, a: 1}
-  m_Intensity: 5
+  m_Intensity: 7
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   isActive: 1
   saveInput: 1
   futureSimon: 0
-  firstWall: 0
+  firstSimon: 0
   interactRange: 8
   numRounds: 6
 --- !u!1 &5896190356235962087

@@ -98,7 +98,6 @@ public class SimonSaysPuzzle : MonoBehaviour
 
             }
         }
-
         bool playerIsInRange = (player.transform.position - transform.position).magnitude <= interactRange ? true : false;
 
         if (isActive)
