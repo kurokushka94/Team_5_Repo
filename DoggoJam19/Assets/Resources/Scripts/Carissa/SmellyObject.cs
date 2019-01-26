@@ -30,7 +30,7 @@ public class SmellyObject : MonoBehaviour
     {
         isEffecting = true;
 
-        Vector3 offset = new Vector3(0f, -1f, 1f);
+        Vector3 offset = new Vector3(0f, -5f, 1f);
         GameObject temp = Instantiate(smellEffect, player.transform.position + offset, player.transform.rotation);
         temp.SendMessage("SetTarget", gameObject);
 
