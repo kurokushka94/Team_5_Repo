@@ -14,7 +14,7 @@ public class Sliding : MonoBehaviour
     {
         if (MoveObject)
         {
-            transform.position += new Vector3(0, 0.1f, 0);
+            transform.position += new Vector3(0.1f, 0, 0);
             if (timer < 0.5f)
                 timer += Time.deltaTime;
             else

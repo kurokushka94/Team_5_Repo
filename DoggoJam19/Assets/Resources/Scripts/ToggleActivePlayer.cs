@@ -8,6 +8,10 @@ public class ToggleActivePlayer : MonoBehaviour
 	public GameObject PastPlayer;
     [SerializeField]
     GameObject FadeScreen = null;
+    [SerializeField]
+    GameObject PastGhost = null;
+    [SerializeField]
+    GameObject FutureGhost = null;
 
 	private Camera MainCam;
 	//private CharacterController FutureController;
@@ -93,5 +97,10 @@ public class ToggleActivePlayer : MonoBehaviour
 		newPlayer.GetComponent<CharacterController>().enabled = true;
 		newPlayer.GetComponent<PlayerController>().enabled = true;
 		TimeTraveling = false;
-	}
+        Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
+        FutureGhost.transform.localPosition = FuturePlayer.transform.localPosition - Utility.GetOffset();
+        Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
+        PastGhost.transform.localPosition = PastPlayer.transform.localPosition + Utility.GetOffset();
+
+    }
 }

@@ -7,7 +7,7 @@ public static class Utility
     public delegate void ActivateStartDelegate();
     public delegate void ActivateFinishDelegate();
     [SerializeField]
-    static Vector3 GlobalOffset = new Vector3(2,0,0);
+    static Vector3 GlobalOffset = new Vector3(0,-10,0);
 	public static bool PlayerHasAnItem = false;
     public static Vector3 GetOffset()
     {

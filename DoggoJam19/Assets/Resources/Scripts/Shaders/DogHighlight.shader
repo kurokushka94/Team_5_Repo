@@ -8,7 +8,7 @@ Shader "Custom/DogHighlight"
         _NoiseTex ("Noise texture", 2D) = "grey" {}
         _Mitigation ("Distortion mitigation", Range(1, 30)) = 1
 		_OffsetX("Offset along X", Range(-1, 1)) = 1
-        _OffsetY("Offset along Y", Range(-1, 1)) = 1
+        _OffsetY("Offset along Y", Range(-1, 5)) = 1
         _SpeedX("Speed along X", Range(0, 5)) = 1
         _SpeedY("Speed along Y", Range(0, 5)) = 1
 		_MainColor("Color", color) = (0, 0, 0, 0)
@@ -17,12 +17,13 @@ Shader "Custom/DogHighlight"
     SubShader
     {
         Tags { "RenderType"="Transparent" }
+		Tags { "ForceNoShadowCasting" = "True"}
 		Cull Off
         LOD 200
 		Pass
 		{
         CGPROGRAM
-   //     #pragma surface surf Standard fullforwardshadows
+
 	    #pragma vertex vert
 		#pragma fragment frag 
         #pragma target 3.0
@@ -55,13 +56,13 @@ Shader "Custom/DogHighlight"
 		half4 frag(v2f i) : COLOR {
                 half2 uv = i.uv;
                 half noiseVal = tex2D(_NoiseTex, uv).r;
-                uv.x = (uv.x + _Time.y * _SpeedX)*_OffsetX;
-                uv.y = (uv.y + _Time.y * _SpeedY)*_OffsetY;
+                uv.x = (uv.x + _Time.y * _SpeedX)*_OffsetX*noiseVal;
+                uv.y = (uv.y +_Time.y* _SpeedY)*_OffsetY;
 				half4 FinalColor = tex2D(_MainTex, uv);
 			    if(FinalColor.r+FinalColor.g<FinalColor.b+_Adjustment)
 					clip(-1);
 
-                return FinalColor+_MainColor;
+                return FinalColor-_MainColor;
         }
         ENDCG
 		}
