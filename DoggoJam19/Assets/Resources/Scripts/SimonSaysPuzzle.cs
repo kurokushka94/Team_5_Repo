@@ -117,6 +117,7 @@ public class SimonSaysPuzzle : MonoBehaviour
                         if (simonsTurns[i] != playersTurns[i])
                         {
                             correctPattern = false;
+                            playersTurns.Clear();
                             break;
                         }
                     }
@@ -150,6 +151,11 @@ public class SimonSaysPuzzle : MonoBehaviour
             PlaySimonSays(_pInput);
         else if (firstPasswordIn && playGame && !secondPasswordIn)
             EnterSecondPassword(_pInput);
+    }
+
+    private void WrongInput()
+    {
+
     }
 
     private void EnterFirstPassword(int _pInput)
