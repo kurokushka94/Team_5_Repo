@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class SimonSaysPuzzle : MonoBehaviour
 {
     public GameObject[] nodes; // Goes in order: 1.Cow, 2.Cat, 3.Pig, 4.Dog
-    public GameObject   futureWall;
+    public GameObject   FutureWall;
+    public GameObject   FirstWall;
     public Canvas       wrongInput;
 
     [HideInInspector]   public List<int> simonsTurns;
@@ -14,6 +15,7 @@ public class SimonSaysPuzzle : MonoBehaviour
     public bool         isActive;
     public bool         saveInput;
     public bool         futureSimon;
+    public bool         firstWall;
     public float        interactRange;
     public int          numRounds;
 
@@ -68,7 +70,7 @@ public class SimonSaysPuzzle : MonoBehaviour
         //collectedInput =        false;
         initialyActive = isActive == true ? true : false;
 
-        Debug.Log("FUTURE SIMON IS: " + futureSimon);
+        //Debug.Log("FUTURE SIMON IS: " + futureSimon);
 
         currRound = 1;
     }
@@ -76,6 +78,27 @@ public class SimonSaysPuzzle : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!simonIsInitialized)
+        {
+            if (!isActive && !saveInput && !initialyActive && !futureSimon)
+            {
+                InitializeSimon();
+
+                Sprite[] switchPictures = new Sprite[4];
+                switchPictures[0] = Resources.Load<Sprite>("Sprites\\Cow");
+                switchPictures[1] = Resources.Load<Sprite>("Sprites\\Cat");
+                switchPictures[2] = Resources.Load<Sprite>("Sprites\\Pig");
+                switchPictures[3] = Resources.Load<Sprite>("Sprites\\Dog");
+
+                for (int i = 0; i < 4; ++i)
+                    nodes[i].GetComponentInChildren<SpriteRenderer>().sprite = switchPictures[simonsTurns[i]];
+
+                if (FirstWall)
+                    FirstWall.GetComponent<SimonSaysPuzzle>().simonsTurns = this.simonsTurns;
+
+            }
+        }
+
         bool playerIsInRange = (player.transform.position - transform.position).magnitude <= interactRange ? true : false;
 
         if (isActive)
@@ -91,7 +114,7 @@ public class SimonSaysPuzzle : MonoBehaviour
                 {
                     //Debug.DrawRay(player.transform.position, player.transform.GetChild(0).transform.forward, Color.blue);
 
-                    if (currRound <= numRounds && !simonFinishedSaying && !simonIsSaying && !saveInput && !inputWasSaved)
+                    if (currRound <= numRounds && !simonFinishedSaying && !simonIsSaying && !saveInput && !inputWasSaved && !firstWall)
                         StartCoroutine("SimonSays", currRound);
 
                     if (hit.transform.name == "CowPicture")
@@ -167,7 +190,7 @@ public class SimonSaysPuzzle : MonoBehaviour
                         }
                     }
 
-                    if (!saveInput && !simonIsSaying && havePInput && !futureSimon)
+                    if (!saveInput && !simonIsSaying && havePInput && !futureSimon && !firstWall)
                     {
                         //Check players input against Simon
                         for (int i = 0; i < playersTurns.Count; ++i)
@@ -231,14 +254,14 @@ public class SimonSaysPuzzle : MonoBehaviour
                             for (int i = 0; i < 4; ++i)
                                 nodes[i].GetComponentInChildren<Canvas>().enabled = false;
 
-                            futureWall.GetComponent<SimonSaysPuzzle>().inputWasSaved = true;
-                            futureWall.GetComponent<SimonSaysPuzzle>().simonsTurns.Clear();
-                            futureWall.GetComponent<SimonSaysPuzzle>().simonsTurns = playersTurns;
+                            FutureWall.GetComponent<SimonSaysPuzzle>().inputWasSaved = true;
+                            FutureWall.GetComponent<SimonSaysPuzzle>().simonsTurns.Clear();
+                            FutureWall.GetComponent<SimonSaysPuzzle>().simonsTurns = playersTurns;
                         }
 
                         havePInput = false;
                     }
-                    if(futureSimon && havePInput)
+                    if((futureSimon && havePInput) || (firstWall && havePInput))
                     {
                         for (int i = 0; i < playersTurns.Count; ++i)
                         {
@@ -284,13 +307,6 @@ public class SimonSaysPuzzle : MonoBehaviour
                 }
             }
         }
-        else if(!isActive && !saveInput && initialyActive && !futureSimon)
-        {
-            if (!simonIsInitialized)
-                InitializeSimon();
-
-            //Sprite[] switchPictures = new Sprite[4];
-        }
 
         if(!playerIsInRange && initialyActive && !saveInput && !futureSimon)
         {
@@ -319,9 +335,11 @@ public class SimonSaysPuzzle : MonoBehaviour
 
     private void InitializeSimon()
     {
-        if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
+        if (!firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput && !firstWall)
+        {
             for (int i = 0; i < 4; ++i)
                 simonsTurns.Add(rand.Next() % 4);
+        }
 
         else if (firstPasswordIn && !playedGame && !secondPasswordIn && !saveInput)
             for (int i = 0; i < 4 * numRounds; ++i)

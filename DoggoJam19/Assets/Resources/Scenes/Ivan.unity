@@ -190,11 +190,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SimonSays Placeholder (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 5896190356230225281, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 431989387211657124, guid: 1c2652236eb65ee4c8051e6cc5739d03,
         type: 3}
       propertyPath: m_Camera
@@ -270,52 +265,16 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1590581379}
-    - target: {fileID: 5896190356235962083, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5896190356571133764, guid: 1c2652236eb65ee4c8051e6cc5739d03,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1590581379}
-    - target: {fileID: 5896190356571133764, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5896190356230225294, guid: 1c2652236eb65ee4c8051e6cc5739d03,
         type: 3}
-      propertyPath: interactRange
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5896190356230225294, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-        type: 3}
-      propertyPath: wrongInput
+      propertyPath: FirstWall
       value: 
-      objectReference: {fileID: 2023996842}
-    - target: {fileID: 5896190356230225294, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-        type: 3}
-      propertyPath: isActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1122157651, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.0800002
-      objectReference: {fileID: 0}
-    - target: {fileID: 2067565651, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.08
-      objectReference: {fileID: 0}
-    - target: {fileID: 43939751, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.0799992
-      objectReference: {fileID: 0}
-    - target: {fileID: 432242038, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.080001
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1368485496}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
 --- !u!1001 &428925903
@@ -578,6 +537,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1920321451}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1368485496 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5896190356230225281, guid: 1c2652236eb65ee4c8051e6cc5739d03,
+    type: 3}
+  m_PrefabInstance: {fileID: 5896190356097687812}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1434557390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -593,7 +558,7 @@ PrefabInstance:
     - target: {fileID: 6441495940630982071, guid: e44345854db86844cb916463270b9a46,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.35
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6441495940630982071, guid: e44345854db86844cb916463270b9a46,
         type: 3}
@@ -603,7 +568,7 @@ PrefabInstance:
     - target: {fileID: 6441495940630982071, guid: e44345854db86844cb916463270b9a46,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.68
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 6441495940630982071, guid: e44345854db86844cb916463270b9a46,
         type: 3}
@@ -1133,12 +1098,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!223 &2023996842 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 431989387211657124, guid: 1c2652236eb65ee4c8051e6cc5739d03,
-    type: 3}
-  m_PrefabInstance: {fileID: 317841395}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5896190356097687812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1255,6 +1214,16 @@ PrefabInstance:
         type: 3}
       propertyPath: saveInput
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896190356230225294, guid: 1c2652236eb65ee4c8051e6cc5739d03,
+        type: 3}
+      propertyPath: firstWall
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5896190356230225294, guid: 1c2652236eb65ee4c8051e6cc5739d03,
+        type: 3}
+      propertyPath: isActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1122157651, guid: 1c2652236eb65ee4c8051e6cc5739d03, type: 3}
       propertyPath: m_LocalPosition.z
