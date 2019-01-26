@@ -7,6 +7,9 @@ public class Future : MonoBehaviour
 
     protected Utility.ActivateStartDelegate ActivateStart;
 
+
+
+
     public void AddActivateStartFunction(Utility.ActivateStartDelegate _startFunction)
     {
         ActivateStart += _startFunction;
@@ -17,6 +20,7 @@ public class Future : MonoBehaviour
         if (_targetObject != null)
             gameObject.transform.position = _targetObject.transform.position + Utility.GetOffset();
     }
+
     public virtual void ActivateObject()
     {
         if (ActivateStart != null)
