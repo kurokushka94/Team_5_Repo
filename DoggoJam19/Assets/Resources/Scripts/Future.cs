@@ -7,8 +7,7 @@ public class Future : MonoBehaviour
 
     protected Utility.ActivateStartDelegate ActivateStart;
 
-
-
+    
 
     public void AddActivateStartFunction(Utility.ActivateStartDelegate _startFunction)
     {

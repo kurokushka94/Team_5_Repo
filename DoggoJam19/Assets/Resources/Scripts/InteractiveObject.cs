@@ -103,6 +103,7 @@ public class InteractiveObject : MonoBehaviour
 
 	private void DetachFromPlayer()
 	{
+        gameObject.GetComponent<Past>().FinishUpdate(null);
 		Utility.PlayerHasAnItem = false;
 		PickedUp = false;
 		myRigidBody.useGravity = true;
