@@ -47,7 +47,7 @@ public class PlayerCollision : MonoBehaviour
         if (door)
         {
             if (door.enabled)
-                door.TakeDamage(pushDir.magnitude * m_PushForce);
+                door.TakeDamage(gameObject);
         }
     }
 }

@@ -6,23 +6,28 @@ using UnityEngine;
 public class JammedDoor : MonoBehaviour
 {
     public float m_Cooldown = 1.0f;
-    public float m_Health = 100.0f;
+    public int m_Health = 4;
     float initialHealth;
     HingeJoint hinge;
-
+    Vector3 hitPos;
     bool onCooldown = false;
-    public void TakeDamage(float damage)
+    GameObject other;
+    bool track = false;
+    public void TakeDamage(GameObject instigator)
     {
+        hitPos = instigator.transform.position;
+        other = instigator;
         if (m_Health > 0)
         {
-            if (onCooldown)
+            if (onCooldown || track)
                 return;
             onCooldown = true;
             StartCoroutine(DamageTimer());
-            m_Health -= damage;
+            m_Health--;
             JointLimits newLimit = hinge.limits;
             newLimit.max = Mathf.Lerp(20.0f, 0.0f, m_Health / initialHealth);
             hinge.limits = newLimit;
+            track = true;
         }
         else
         {
@@ -56,8 +61,13 @@ public class JammedDoor : MonoBehaviour
     }
 
     // Update is called once per frame
+    public float m_Distance = 0.5f;
     void Update()
     {
-
+        if(track)
+        {
+            if (Vector3.Distance(hitPos, other.transform.position) > m_Distance)
+                track = false;
+        }
     }
 }
