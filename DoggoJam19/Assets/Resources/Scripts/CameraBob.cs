@@ -29,12 +29,14 @@ public class CameraBob : MonoBehaviour
 
     float phaseX = 0.0f;
     float phaseY = 0.0f;
+    Vector3 cachedVel = Vector3.zero;
     // Update is called once per frame
     void Update()
     {
         Vector3 horizontalVel = m_PlayerController.GetVelocity();
         horizontalVel.y = 0.0f;
-        float vel = horizontalVel.magnitude;
+        cachedVel = Vector3.MoveTowards(cachedVel, horizontalVel, 1.0f*Time.deltaTime);
+        float vel = cachedVel.magnitude;
         float alphaVel = vel / m_PlayerController.m_MaxSpeedSprint;
         float magh = Mathf.Lerp(m_HorizontalMagnitudeMin, m_HorizontalMagnitudeMax, alphaVel);
         float magy = Mathf.Lerp(m_VerticalMagnitudeMin, m_VerticalMagnitudeMax, alphaVel);

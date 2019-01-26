@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 [RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
 public class InteractiveObject : MonoBehaviour
 {
@@ -29,16 +31,19 @@ public class InteractiveObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		float DotResult = 0;
+
+		if (player != null)
+		{
+			Vector3 toItem = Vector3.Normalize(transform.position - player.transform.GetChild(0).transform.position); //vector that points from the player to the item
+			DotResult = Vector3.Dot(player.transform.GetChild(0).transform.forward, toItem);
+		}
+
 		if (Input.GetButtonDown("Interact"))
 		{
-			if (PlayerInRange && !PickedUp)
+			if (PlayerInRange && !PickedUp && !Utility.PlayerHasAnItem)
 			{
 				Debug.Log("Picking Up Item");
-				PickedUp = true;
-
-				Vector3 toItem = Vector3.Normalize(transform.position - player.transform.GetChild(0).transform.position); //vector that points from the player to the item
-
-				float DotResult = Vector3.Dot(player.transform.GetChild(0).transform.forward, toItem);
 				Debug.Log("Dot Product Result: " + DotResult);
 				
 				if (DotResult > 0.95f)
@@ -48,15 +53,19 @@ public class InteractiveObject : MonoBehaviour
 			}
 			else if (PickedUp)
 			{
-				PickedUp = false;
 				DetachFromPlayer();
 			}
 		}
 
-		if (myCanvas.enabled && player != null)
+		if (player != null)
 		{
-			myCanvas.transform.LookAt(player.transform.position);
-			myCanvas.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 180);
+			if (PlayerInRange && DotResult > 0.95f)
+			{
+				myCanvas.enabled = true;
+				myCanvas.transform.LookAt(player.transform.position);
+				myCanvas.transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f), 180);
+			}
+			else myCanvas.enabled = false;
 		}
 	}
 
@@ -67,7 +76,7 @@ public class InteractiveObject : MonoBehaviour
 			PlayerInRange = true;
 			Debug.Log("PLAYER IN RANGE");
 			player = other.gameObject;
-			myCanvas.enabled = true;
+			//myCanvas.enabled = true;
 		}
 	}
 
@@ -76,13 +85,15 @@ public class InteractiveObject : MonoBehaviour
 		if(other.tag == "Player")
 		{
 			PlayerInRange = false;
-			myCanvas.enabled = false;
+			//myCanvas.enabled = false;
 			Debug.Log("PLAYER OUT OF RANGE");
 		}
 	}
 
 	private void AttachToPlayer()
 	{
+		Utility.PlayerHasAnItem = true;
+		PickedUp = true;
 		myRigidBody.useGravity = false;
 		myRigidBody.detectCollisions = false;
 		this.transform.SetParent(player.transform.GetChild(0), true);
@@ -92,6 +103,8 @@ public class InteractiveObject : MonoBehaviour
 
 	private void DetachFromPlayer()
 	{
+		Utility.PlayerHasAnItem = false;
+		PickedUp = false;
 		myRigidBody.useGravity = true;
 		myRigidBody.detectCollisions = true;
 		this.transform.SetParent(null);
