@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Test
+  m_Name: Fade
   m_Shader: {fileID: 4800000, guid: 369b3d007a6f29f42badc2957560bc3a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
