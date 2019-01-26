@@ -8,6 +8,8 @@ public class SmellyObject : MonoBehaviour
     GameObject player;
     public GameObject smellEffect;
 
+    public float smellRange;
+
     public bool isSmelling;
     private bool isEffecting;
 
@@ -20,9 +22,71 @@ public class SmellyObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isSmelling && !isEffecting)
+        if (isSmelling && !isEffecting && Vector3.Distance(player.transform.position, transform.position) > smellRange)
         {
             StartCoroutine("EffectWait");
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (gameObject.name == "PuzzleA1")
+        {
+            PuzzleManager.PuzzleA1 += SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleA2")
+        {
+            PuzzleManager.PuzzleA2 += SetEffectOff;
+            PuzzleManager.PuzzleA1 += SetEffectOn;
+        }
+        else if (gameObject.name == "PuzzleB1")
+        {
+            PuzzleManager.PuzzleB1 += SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleB2")
+        {
+            PuzzleManager.PuzzleB2 += SetEffectOff;
+            PuzzleManager.PuzzleB1 += SetEffectOn;
+        }
+        else if (gameObject.name == "PuzzleC1")
+        {
+            PuzzleManager.PuzzleC1 += SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleC2")
+        {
+            PuzzleManager.PuzzleC2 += SetEffectOff;
+            PuzzleManager.PuzzleC1 += SetEffectOn;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (gameObject.name == "PuzzleA1")
+        {
+            PuzzleManager.PuzzleA1 -= SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleA2")
+        {
+            PuzzleManager.PuzzleA2 -= SetEffectOff;
+            PuzzleManager.PuzzleA1 -= SetEffectOn;
+        }
+        else if (gameObject.name == "PuzzleB1")
+        {
+            PuzzleManager.PuzzleB1 -= SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleB2")
+        {
+            PuzzleManager.PuzzleB2 -= SetEffectOff;
+            PuzzleManager.PuzzleB1 -= SetEffectOn;
+        }
+        else if (gameObject.name == "PuzzleC1")
+        {
+            PuzzleManager.PuzzleC1 -= SetEffectOff;
+        }
+        else if (gameObject.name == "PuzzleC2")
+        {
+            PuzzleManager.PuzzleC2 -= SetEffectOff;
+            PuzzleManager.PuzzleC1 -= SetEffectOn;
         }
     }
 
@@ -37,5 +101,15 @@ public class SmellyObject : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.15f);
 
         isEffecting = false;
+    }
+
+    void SetEffectOff()
+    {
+        isSmelling = false;
+    }
+
+    void SetEffectOn()
+    {
+        isSmelling = true;
     }
 }
