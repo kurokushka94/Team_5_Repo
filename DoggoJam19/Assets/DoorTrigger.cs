@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class DoorTrigger : GenericListener
 {
-    public string AnimationName;
-
-    Animation animationToPlay;
+    public Animator mAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -15,14 +13,13 @@ public class DoorTrigger : GenericListener
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-
+        base.Update();
     }
 
     protected override void AllTriggersOccured()
     {
-        animationToPlay = Resources.Load<Animation>(AnimationName);
-        animationToPlay.Play();
+        mAnimator.SetBool("Open", true);
     }
 }
