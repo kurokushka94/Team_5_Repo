@@ -274,6 +274,8 @@ public class SimonSaysPuzzle : BaseCondition
                             FutureWall.GetComponent<SimonSaysPuzzle>().inputWasSaved = true;
                             FutureWall.GetComponent<SimonSaysPuzzle>().simonsTurns.Clear();
                             FutureWall.GetComponent<SimonSaysPuzzle>().simonsTurns = playersTurns;
+
+                            IsActivated = true;
                         }
 
                         havePInput = false;
