@@ -5,7 +5,8 @@ using UnityEngine;
 public class SmellyObject : MonoBehaviour
 {
     //public Camera mainCamera;
-    GameObject player;
+
+    public GameObject player;
     public GameObject smellEffect;
 
     public float smellRange;
@@ -16,7 +17,7 @@ public class SmellyObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        //player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame

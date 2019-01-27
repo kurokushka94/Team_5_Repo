@@ -8,9 +8,23 @@ public class Platform : MonoBehaviour
 
     Vector3 position;
     Vector3 newPosition;
+    Time time;
+
+    AudioSource source;
+    public AudioClip upServoStart;
+    public AudioClip upServoEnd;
+    public AudioClip upServoLoop;
+    public AudioClip downServoStart;
+    public AudioClip downServoEnd;
+    public AudioClip downServoLoop;
+
+    private AudioClip startToPlay;
+    private AudioClip endToPlay;
+    private AudioClip loopToPlay;
 
     private float increase;
     private bool isMoving;
+    private bool isPlaying;
 
     [HideInInspector] public bool isIncreasing;
 
@@ -18,6 +32,7 @@ public class Platform : MonoBehaviour
     void Start()
     {
         position = transform.position;
+        source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -26,25 +41,48 @@ public class Platform : MonoBehaviour
         if (isIncreasing)
         {
             increase = 0.01f;
+            startToPlay = upServoStart;
+            endToPlay = upServoEnd;
+            loopToPlay = upServoLoop;
+           
         }
         else if (!isIncreasing)
         {
             increase = -0.01f;
+            startToPlay = downServoStart;
+            endToPlay = downServoEnd;
+            loopToPlay = downServoLoop;
         }
 
         newPosition = position + offset;
 
-        if (Vector3.Distance(transform.position, newPosition) > 0.01f)
+        if (Vector3.Distance(transform.position, newPosition) > 0.01f && !isMoving)
         {
             StartCoroutine("MovePlatform");
+            //source.Play();
         }
     }
 
     IEnumerator MovePlatform()
     {
         isMoving = true;
-        transform.position = new Vector3(transform.position.x, transform.position.y + increase, transform.position.z);
-        yield return new WaitForSecondsRealtime(0.01f);
+        int delay = 0;
+
+        source.PlayOneShot(startToPlay);
+        yield return new WaitForSecondsRealtime(0.4f);
+        while(Vector3.Distance(transform.position, newPosition) >= 0.01f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + increase, transform.position.z);
+            ++delay;
+            source.clip = loopToPlay;
+            if(delay % 25 == 0)
+                source.Play();
+            yield return new WaitForSecondsRealtime(0.01f);
+
+        }
+        yield return new WaitForSecondsRealtime(0.05f);
+        source.Stop();
+        source.PlayOneShot(endToPlay);
         isMoving = false;
     }
 
