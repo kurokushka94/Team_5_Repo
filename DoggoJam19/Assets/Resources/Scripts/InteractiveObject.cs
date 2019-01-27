@@ -114,7 +114,10 @@ public class InteractiveObject : MonoBehaviour
         this.transform.SetParent(null);
         Debug.Log("Detached from Player");
 
-        BoxCollider box = GetComponent<BoxCollider>();
+        myRigidBody.detectCollisions = true;
+        myRigidBody.useGravity = true;
+
+        //BoxCollider box = GetComponent<BoxCollider>();
 
     }
 
