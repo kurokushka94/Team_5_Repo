@@ -76,6 +76,8 @@ public class CollectableScript : MonoBehaviour
     private void GameWon()
     {
         end = true;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         gameWon.enabled = true;
         Time.timeScale = 0;
     }
