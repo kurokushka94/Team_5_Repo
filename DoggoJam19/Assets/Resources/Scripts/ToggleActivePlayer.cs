@@ -83,7 +83,7 @@ public class ToggleActivePlayer : MonoBehaviour
 		float tempFOV = MainCam.fieldOfView;
 
         if(FadeScreen!= null)
-            FadeScreen.GetComponent<FadeOut>().FadeOutScreen();
+            FadeScreen.GetComponent<FadeOut>().FadeOutScreen((PastIsActive) ? -1 : 1);
 
 		float volume = myAS.volume;
 		float STOREDvol = volume / 60.0f;
@@ -118,9 +118,9 @@ public class ToggleActivePlayer : MonoBehaviour
 		newPlayer.GetComponent<CharacterController>().enabled = true;
 		newPlayer.GetComponent<PlayerController>().enabled = true;
 		TimeTraveling = false;
-        Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
+        //Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
         FutureGhost.transform.position = FuturePlayer.transform.position - Utility.GetOffset();
-        Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
+        //Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
         PastGhost.transform.position = PastPlayer.transform.position + Utility.GetOffset();
 
     }
