@@ -16,9 +16,11 @@ Shader "Custom/DogHighlight"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
+         Tags {"Queue"="Transparent" "RenderType"="Transparent" }
 		Tags { "ForceNoShadowCasting" = "True"}
 		Cull Off
+		        ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
         LOD 200
 		Pass
 		{
@@ -58,11 +60,12 @@ Shader "Custom/DogHighlight"
                 half noiseVal = tex2D(_NoiseTex, uv).r;
                 uv.x = (uv.x + _Time.y * _SpeedX)*_OffsetX*noiseVal;
                 uv.y = (uv.y +_Time.y* _SpeedY)*_OffsetY;
-				half4 FinalColor = tex2D(_MainTex, uv);
-			    if(FinalColor.r+FinalColor.g<FinalColor.b+_Adjustment)
-					clip(-1);
-
-                return FinalColor-_MainColor;
+				fixed4 FinalColor = tex2D(_MainTex, uv);
+//			    if(FinalColor.r+FinalColor.g<FinalColor.b+_Adjustment)
+//					clip(-1);
+				FinalColor = FinalColor - _MainColor;
+				FinalColor.a = _Adjustment;
+                return FinalColor;
         }
         ENDCG
 		}

@@ -13,6 +13,8 @@ public class SmellRenderer : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        Destroy(gameObject, 10f);
     }
 
     // Update is called once per frame
@@ -22,7 +24,7 @@ public class SmellRenderer : MonoBehaviour
         {
             agent.SetDestination(target.transform.position);
 
-            if (Vector3.Distance(transform.position, target.transform.position) <= 1f)
+            if (Vector3.Distance(transform.position, target.transform.position) <= 2f)
             {
                 Destroy(gameObject);
             }

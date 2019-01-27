@@ -23,7 +23,7 @@ public class SimonSaysPuzzle : BaseCondition
     private List<int>               playersTurns;
     private SimonSaysPuzzle[]       allSimons;
 
-    private GameObject          player;
+    public GameObject          player;
     private System.Random       rand;
 
     private int currRound;
@@ -47,7 +47,7 @@ public class SimonSaysPuzzle : BaseCondition
     // Start is called before the first frame update
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        //player = GameObject.FindGameObjectWithTag("Player");
 
         rand =          new System.Random();
         simonsTurns =   new List<int>();

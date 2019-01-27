@@ -34,7 +34,7 @@ public class MainMenuFunctions : MonoBehaviour
 
 	public void LoadGame()
 	{
-		SceneManager.LoadScene("Dylan"); //replace with game scene later
+		SceneManager.LoadScene(1); //replace with game scene later
 	}
 
 	public void ToOptions()
