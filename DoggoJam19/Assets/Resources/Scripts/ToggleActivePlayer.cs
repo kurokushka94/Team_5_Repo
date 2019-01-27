@@ -98,9 +98,9 @@ public class ToggleActivePlayer : MonoBehaviour
 		newPlayer.GetComponent<PlayerController>().enabled = true;
 		TimeTraveling = false;
         Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
-        FutureGhost.transform.localPosition = FuturePlayer.transform.localPosition - Utility.GetOffset();
+        FutureGhost.transform.position = FuturePlayer.transform.position - Utility.GetOffset();
         Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
-        PastGhost.transform.localPosition = PastPlayer.transform.localPosition + Utility.GetOffset();
+        PastGhost.transform.position = PastPlayer.transform.position + Utility.GetOffset();
 
     }
 }
