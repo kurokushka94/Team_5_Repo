@@ -9,6 +9,9 @@ public class PressurePlate : MonoBehaviour
 
     GameObject platform;
 
+    AudioSource source;
+    public AudioClip buttonClick;
+
     Vector3 position;
     Vector3 pressedPos;
     Vector3 offset = new Vector3(0f, -0.075f, 0f);
@@ -20,6 +23,8 @@ public class PressurePlate : MonoBehaviour
     void Start()
     {
         platform = GameObject.Find("Platform");
+
+        source = GetComponent<AudioSource>();
 
         //if (gameObject.name == "PressurePlate[3]")
         //{
@@ -74,6 +79,7 @@ public class PressurePlate : MonoBehaviour
                 {
                     isPressed = true;
                     transform.position += offset;
+                    source.PlayOneShot(buttonClick, 1f);
                     platform.SendMessage("AddToOffset", distance, SendMessageOptions.DontRequireReceiver);
                     platform.GetComponent<Platform>().isIncreasing = true;
                 }
@@ -81,6 +87,7 @@ public class PressurePlate : MonoBehaviour
                 {
                     isPressed = false;
                     transform.position = position;
+                    source.PlayOneShot(buttonClick, 1f);
                     platform.SendMessage("SubtractFromOffset", distance, SendMessageOptions.DontRequireReceiver);
                     platform.GetComponent<Platform>().isIncreasing = false;
                 }
