@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SimonSaysPuzzle : MonoBehaviour
+public class SimonSaysPuzzle : BaseCondition
 {
     public GameObject[] nodes; // Goes in order: 1.Cow, 2.Cat, 3.Pig, 4.Dog
     public GameObject   FutureWall;
@@ -12,6 +12,7 @@ public class SimonSaysPuzzle : MonoBehaviour
 
     [HideInInspector]   public List<int> simonsTurns;
     [HideInInspector]   public bool inputWasSaved;
+
     public bool         isActive;
     public bool         saveInput;
     public bool         futureSimon;
@@ -239,6 +240,8 @@ public class SimonSaysPuzzle : MonoBehaviour
                             else if (firstPasswordIn && !playedGame && !secondPasswordIn)
                                 for (int i = 0; i < allSimons.Length; ++i)
                                     allSimons[i].SendMessage("SetFlag", playedGame, SendMessageOptions.DontRequireReceiver);
+                            if (correctInput == true)
+                                IsActivated = true;
                         }
                     }
                     else if (saveInput && !simonIsSaying && havePInput)
@@ -293,6 +296,8 @@ public class SimonSaysPuzzle : MonoBehaviour
                             madeMistake = false;
                             finishedInput = false;
                             havePInput = false;
+                            if (correctInput == true)
+                                IsActivated = true;
                         }
 
                         if(correctInput)
