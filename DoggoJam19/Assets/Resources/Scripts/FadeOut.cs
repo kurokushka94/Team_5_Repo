@@ -20,7 +20,10 @@ public class FadeOut : MonoBehaviour
         {
             Renderer test = gameObject.GetComponent<Renderer>();
             if (test)
+            {
                 targetMaterial = test.material;
+                targetMaterial.SetFloat("_Disperse", FadeTimer);
+            }
         }
     }
 
@@ -47,12 +50,17 @@ public class FadeOut : MonoBehaviour
         {
             targetMaterial.SetFloat("_Disperse", FadeTimer);
         }
+        else
+        {
+            FadeTimer = 0;
+            targetMaterial.SetFloat("_Disperse", FadeTimer);
+        }
     }
     //-1 => Left
     // 1 => Right
-    public void FadeOutScreen()//int _direction)
+    public void FadeOutScreen(int _direction)
     {
         isFadingOut = true;
-        targetMaterial.SetFloat("_Direction", 1);
+        targetMaterial.SetFloat("_Direction", _direction);
     }
 }
