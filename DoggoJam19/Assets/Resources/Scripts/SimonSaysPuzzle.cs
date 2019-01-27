@@ -22,12 +22,17 @@ public class SimonSaysPuzzle : BaseCondition
 
     private List<int>               playersTurns;
     private SimonSaysPuzzle[]       allSimons;
+    private AudioSource             source;
 
     public GameObject          player;
     private System.Random       rand;
 
-    private int currRound;
+    private AudioClip cowClip;
+    private AudioClip catClip;
+    private AudioClip pigClip;
+    private AudioClip dogClip;
 
+    private int currRound;
     private bool wrongInputShow;
     private bool correctInput;
     private bool madeMistake;
@@ -53,6 +58,12 @@ public class SimonSaysPuzzle : BaseCondition
         simonsTurns =   new List<int>();
         playersTurns =  new List<int>();
         allSimons = FindObjectsOfType<SimonSaysPuzzle>();
+        source = transform.GetComponent<AudioSource>();
+
+        cowClip = Resources.Load<AudioClip>("Audio\\Ivan\\Simon_Cow_1");
+        catClip = Resources.Load<AudioClip>("Audio\\Ivan\\Simon_Cat_1");
+        pigClip = Resources.Load<AudioClip>("Audio\\Ivan\\Simon_Pig_1");
+        dogClip = Resources.Load<AudioClip>("Audio\\Ivan\\Simon_Dog_1");
 
         wrongInputShow =        false;
         correctInput =          false;
@@ -128,6 +139,7 @@ public class SimonSaysPuzzle : BaseCondition
                         }
                         if (Input.GetButtonDown("Interact"))
                         {
+                            source.PlayOneShot(cowClip);
                             AddPlayersChoice(0);
                             StartCoroutine("LitPicture", 0);
                             havePInput = true;
@@ -146,6 +158,7 @@ public class SimonSaysPuzzle : BaseCondition
                         }
                         if (Input.GetButtonDown("Interact"))
                         {
+                            source.PlayOneShot(catClip);
                             AddPlayersChoice(1);
                             StartCoroutine("LitPicture", 1);
                             havePInput = true;
@@ -164,6 +177,7 @@ public class SimonSaysPuzzle : BaseCondition
                         }
                         if (Input.GetButtonDown("Interact"))
                         {
+                            source.PlayOneShot(pigClip);
                             AddPlayersChoice(2);
                             StartCoroutine("LitPicture", 2);
                             havePInput = true;
@@ -182,6 +196,7 @@ public class SimonSaysPuzzle : BaseCondition
                         }
                         if (Input.GetButtonDown("Interact"))
                         {
+                            source.PlayOneShot(dogClip);
                             AddPlayersChoice(3);
                             StartCoroutine("LitPicture", 3);
                             havePInput = true;
@@ -398,7 +413,17 @@ public class SimonSaysPuzzle : BaseCondition
         {
             if (!isLit)
                 StartCoroutine("LitPicture", simonsTurns[i]);
-            yield return new WaitForSecondsRealtime(0.5f);
+
+            if (simonsTurns[i] == 0)
+                source.PlayOneShot(cowClip);
+            else if (simonsTurns[i] == 1)
+                source.PlayOneShot(catClip);
+            else if (simonsTurns[i] == 2)
+                source.PlayOneShot(pigClip);
+            else if (simonsTurns[i] == 3)
+                source.PlayOneShot(dogClip);
+
+            yield return new WaitForSecondsRealtime(0.7f);
         }
 
         simonFinishedSaying = true;
