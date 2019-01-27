@@ -7,11 +7,15 @@ public class GenericButton : BaseCondition
 	private GameObject player;
 	private bool PlayerInRange = false;
 	private Canvas myCanvas;
+	private bool AlreadyActivated = false;
+	private Light dirLight;
 
 	private void Start()
 	{
 		myCanvas = transform.GetComponentInChildren<Canvas>();
 		myCanvas.enabled = false;
+		dirLight = GameObject.FindGameObjectWithTag("DirLight").GetComponent<Light>();
+		dirLight.transform.eulerAngles = new Vector3(15, 5, 0);
 	}
 
 	// Update is called once per frame
@@ -30,6 +34,11 @@ public class GenericButton : BaseCondition
 			if (PlayerInRange && DotResult > 0.95f)
 			{
 				IsActivated = !IsActivated;
+				if(!AlreadyActivated)
+				{
+					AlreadyActivated = true;
+					StartCoroutine(IControlTheSun());
+				}
 			}
 		}
 
@@ -59,6 +68,20 @@ public class GenericButton : BaseCondition
 		if (other.tag == "Player")
 		{
 			PlayerInRange = false;
+		}
+	}
+
+	private IEnumerator IControlTheSun()
+	{
+		float angle = dirLight.transform.eulerAngles.x;
+		float origang = angle;
+
+		while (angle < origang + 50.0f)
+		{
+			angle = Mathf.LerpAngle(angle, origang + 50.0f, Time.deltaTime * 0.1f);
+
+			dirLight.transform.eulerAngles = new Vector3(angle, 5.0f, 0.0f);
+			yield return new WaitForEndOfFrame();
 		}
 	}
 }
