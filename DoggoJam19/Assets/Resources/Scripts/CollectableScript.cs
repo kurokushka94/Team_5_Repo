@@ -23,7 +23,7 @@ public class CollectableScript : MonoBehaviour
     {
         if(_collider.tag == "Player")
         {
-            winningScreen.SendMessage("AddScore", SendMessageOptions.DontRequireReceiver);
+            winningScreen.SendMessage("AddScore");
             StartCoroutine("Kill");
         }
     }
