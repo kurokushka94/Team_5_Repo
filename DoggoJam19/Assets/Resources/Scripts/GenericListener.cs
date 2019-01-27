@@ -43,7 +43,7 @@ public class GenericListener : MonoBehaviour
 		}
     }
 	
-	private void AllTriggersOccured()
+	protected virtual void AllTriggersOccured()
 	{
 		//for debug only
 		//transform.position = new Vector3(transform.position.x, transform.position.y + 1.0f, transform.position.z);
