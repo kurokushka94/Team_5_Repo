@@ -33,6 +33,9 @@ public class Platform : MonoBehaviour
     {
         position = transform.position;
         source = GetComponent<AudioSource>();
+        startToPlay = upServoStart;
+        endToPlay = upServoEnd;
+        loopToPlay = upServoLoop;
     }
 
     // Update is called once per frame
@@ -40,18 +43,11 @@ public class Platform : MonoBehaviour
     {
         if (isIncreasing)
         {
-            increase = 0.01f;
-            startToPlay = upServoStart;
-            endToPlay = upServoEnd;
-            loopToPlay = upServoLoop;
-           
+            increase = 0.01f;           
         }
         else if (!isIncreasing)
         {
             increase = -0.01f;
-            startToPlay = downServoStart;
-            endToPlay = downServoEnd;
-            loopToPlay = downServoLoop;
         }
 
         newPosition = position + offset;

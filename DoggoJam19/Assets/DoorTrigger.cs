@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 public class DoorTrigger : GenericListener
 {
-    public string AnimationName;
+    public Animator mAnimator;
 
-    Animation animationToPlay;
+    public UnityEvent events;
 
     // Start is called before the first frame update
     void Start()
@@ -15,14 +15,29 @@ public class DoorTrigger : GenericListener
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-
+        base.Update();
     }
 
     protected override void AllTriggersOccured()
     {
-        animationToPlay = Resources.Load<Animation>(AnimationName);
-        animationToPlay.Play();
+        mAnimator.SetBool("Open", true);
+
+        if (events != null)
+        {
+            events.Invoke();
+        }
+    }
+
+
+    public void A1()
+    {
+        PuzzleManager.TriggerPuzzleA1();
+    }
+
+    public void B1()
+    {
+        PuzzleManager.TriggerPuzzleB1();
     }
 }
