@@ -61,7 +61,12 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    Vector3 m_CameraGamePadVector;
+	private void OnDisable()
+	{
+		m_Velocity = Vector3.zero;
+	}
+
+	Vector3 m_CameraGamePadVector;
 
     void GatherInput()
     {

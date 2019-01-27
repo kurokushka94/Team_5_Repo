@@ -61,8 +61,7 @@
 
 				clip(step(test,_Disperse)-1);
 
-
-                return (0,0,0,0);
+                return (half4)(0, 0, 0, 0);
         }
         ENDCG
 		}

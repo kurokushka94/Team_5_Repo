@@ -14,15 +14,23 @@ public class ToggleActivePlayer : MonoBehaviour
     GameObject FutureGhost = null;
 
 	private Camera MainCam;
+	private AudioSource myAS;
+	private AudioClip pastMusic;
+	private AudioClip futureMusic;
 	//private CharacterController FutureController;
 	//private CharacterController PastController;
-	private bool PastIsActive = true;
+	public bool PastIsActive = true;
 	private bool TimeTraveling = false;
 
     // Start is called before the first frame update
     void Start()
     {
 		MainCam = Camera.main;
+		myAS = Camera.main.GetComponent<AudioSource>();
+		pastMusic = Resources.Load<AudioClip>("Audio/SFX/Past_Loop_1");
+		futureMusic = Resources.Load<AudioClip>("Audio/SFX/Present_Loop_1");
+
+
 		FuturePlayer.GetComponent<CharacterController>().enabled = false;
 		FuturePlayer.GetComponent<PlayerController>().enabled = false;
 		GetComponent<CameraBob>().m_PlayerController = PastPlayer.GetComponent<PlayerController>();
@@ -34,6 +42,10 @@ public class ToggleActivePlayer : MonoBehaviour
 
 		PastPlayer.GetComponent<CharacterController>().enabled = true;
 		PastPlayer.GetComponent<PlayerController>().enabled = true;
+
+		myAS.loop = true;
+		myAS.clip = pastMusic;
+		myAS.Play();
 	}
 
     // Update is called once per frame
@@ -51,6 +63,7 @@ public class ToggleActivePlayer : MonoBehaviour
 	private IEnumerator SwapPlayers(GameObject newPlayer, GameObject oldPlayer)
 	{
 		TimeTraveling = true;
+		
 		if(transform.childCount != 0)
 		{
 			InteractiveObject io = transform.GetComponentInChildren<InteractiveObject>();
@@ -70,12 +83,14 @@ public class ToggleActivePlayer : MonoBehaviour
 		float tempFOV = MainCam.fieldOfView;
 
         if(FadeScreen!= null)
-            FadeScreen.GetComponent<FadeOut>().FadeOutScreen();
+            FadeScreen.GetComponent<FadeOut>().FadeOutScreen((PastIsActive) ? -1 : 1);
 
-
+		float volume = myAS.volume;
+		float STOREDvol = volume / 60.0f;
         for (float i = tempFOV; i < 120.0f; i += 1.0f)
 		{
 			MainCam.fieldOfView += 1.0f;
+			myAS.volume = Mathf.Lerp(myAS.volume, 0.1f, 0.07f);
 			yield return new WaitForEndOfFrame();
 		}
 
@@ -84,23 +99,29 @@ public class ToggleActivePlayer : MonoBehaviour
 		this.transform.position = newPlayer.transform.position;
 		this.transform.position = new Vector3(transform.position.x, transform.position.y + 0.2f, transform.position.z);
 
+		myAS.Stop();
+		if (PastIsActive) myAS.clip = pastMusic;
+		else myAS.clip = futureMusic;
+		myAS.Play();
+
 		yield return new WaitForEndOfFrame();
 
 		for(float i = 120.0f; i > tempFOV; i -= 1.0f)
 		{
+			myAS.volume = Mathf.Lerp(myAS.volume, volume, 0.05f);
 			MainCam.fieldOfView -= 1.0f;
 			yield return new WaitForEndOfFrame();
 		}
-
+		myAS.volume = volume;
 		MainCam.fieldOfView = tempFOV;
 
 		newPlayer.GetComponent<CharacterController>().enabled = true;
 		newPlayer.GetComponent<PlayerController>().enabled = true;
 		TimeTraveling = false;
-        Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
-        FutureGhost.transform.localPosition = FuturePlayer.transform.localPosition - Utility.GetOffset();
-        Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
-        PastGhost.transform.localPosition = PastPlayer.transform.localPosition + Utility.GetOffset();
+        //Debug.Log("Current: "+ FuturePlayer.transform.localPosition + " Next: "+ (FuturePlayer.transform.localPosition - Utility.GetOffset()));
+        FutureGhost.transform.position = FuturePlayer.transform.position - Utility.GetOffset();
+        //Debug.Log("Current: " + PastPlayer.transform.localPosition + " Next: " + (PastPlayer.transform.localPosition - Utility.GetOffset()));
+        PastGhost.transform.position = PastPlayer.transform.position + Utility.GetOffset();
 
     }
 }
