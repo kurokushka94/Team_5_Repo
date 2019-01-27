@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SmellyObject : MonoBehaviour
 {
     //public Camera mainCamera;
-    GameObject player;
+
+    public GameObject player;
     public GameObject smellEffect;
 
     public float smellRange;
@@ -16,7 +18,7 @@ public class SmellyObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        //player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -94,12 +96,18 @@ public class SmellyObject : MonoBehaviour
     {
         isEffecting = true;
 
-        Vector3 offset = new Vector3(0f, -5f, 1f);
-        GameObject temp = Instantiate(smellEffect, player.transform.position + offset, player.transform.rotation);
-        temp.SendMessage("SetTarget", gameObject);
+        Vector3 offset = new Vector3(0f, -1f, 1f);
+        NavMeshHit target;
+        NavMesh.SamplePosition(player.transform.position, out target, 2.0f, NavMesh.AllAreas);
 
-        yield return new WaitForSecondsRealtime(0.15f);
+        if (target.hit)
+        {
+            GameObject temp = Instantiate(smellEffect, target.position, player.transform.rotation);
+            temp.SendMessage("SetTarget", gameObject);
 
+            yield return new WaitForSecondsRealtime(0.15f);
+
+        }
         isEffecting = false;
     }
 

@@ -13,6 +13,9 @@ public class Past : Future
     }
     public override void FinishUpdate(GameObject _pointLess)
     {
-       futureObject.GetComponent<Future>().FinishUpdate(this.gameObject);
+        if (futureObject != null)
+        {
+            futureObject.GetComponent<Future>().FinishUpdate(this.gameObject);
+        }
     }
 }

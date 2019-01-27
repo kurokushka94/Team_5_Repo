@@ -73,6 +73,8 @@ public class PressurePlate : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            PuzzleManager.TriggerPuzzleC1();
+
             if (hasLeftPlate)
             {
                 if (!isPressed)
